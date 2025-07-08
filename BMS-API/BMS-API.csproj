@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>BMS_API</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BMS.BLL\BMS.BLL.csproj" />
+    <ProjectReference Include="..\BMS.DAL\BMS.DAL.csproj" />
+    <ProjectReference Include="..\BMS.Models\BMS.Models.csproj" />
+  </ItemGroup>
+
+</Project>

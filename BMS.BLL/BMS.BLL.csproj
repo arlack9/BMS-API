@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>BMS.BLL</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BMS.DAL\BMS.DAL.csproj" />
+    <ProjectReference Include="..\BMS.Models\BMS.Models.csproj" />
+  </ItemGroup>
+
+</Project>
