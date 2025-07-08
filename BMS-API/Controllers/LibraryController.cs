@@ -1,4 +1,5 @@
-﻿using BMS.BLL.Services;
+﻿
+using BMS.BLL.Services;
 using BMS.Models.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -66,7 +67,7 @@ namespace BMS_API.Controllers
                 }
 
                 var result = _manageBook.AddBook(book);
-                
+
                 if (result <= 0)
                 {
                     return BadRequest("Failed to add book");
@@ -102,7 +103,7 @@ namespace BMS_API.Controllers
                 }
 
                 var result = _manageBook.UpdateBook(book);
-                
+
                 if (result <= 0)
                 {
                     return NotFound($"Book with ID {id} not found or update failed");
@@ -123,7 +124,7 @@ namespace BMS_API.Controllers
             try
             {
                 var result = _manageBook.DeleteBook(id);
-                
+
                 if (result <= 0)
                 {
                     return NotFound($"Book with ID {id} not found");
