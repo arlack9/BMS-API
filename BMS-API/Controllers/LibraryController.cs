@@ -46,7 +46,7 @@ namespace BMS_API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"internal server error: {ex.Message}");
             }
         }
 
@@ -61,29 +61,26 @@ namespace BMS_API.Controllers
                     return BadRequest("Book data is required");
                 }
 
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
+                
 
                 var result = _manageBook.AddBook(book);
 
                 if (result <= 0)
                 {
-                    return BadRequest("Failed to add book");
+                    return BadRequest("Book failed to add!");
                 }
 
-                return CreatedAtAction(nameof(GetBook), new { id = book.Id }, result);
+                return Ok("Book Added successfully");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"internal server error: {ex.Message}");
             }
         }
 
         // PUT: api/Library/{id}
-        [HttpPut("{id}")]
-        public ActionResult<int> UpdateBook(int id, [FromBody] Book book)
+        [HttpPut]
+        public ActionResult<int> UpdateBook([FromBody] Book book)
         {
             try
             {
@@ -92,28 +89,20 @@ namespace BMS_API.Controllers
                     return BadRequest("Book data is required");
                 }
 
-                if (id != book.Id)
-                {
-                    return BadRequest("ID mismatch");
-                }
 
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
 
                 var result = _manageBook.UpdateBook(book);
 
                 if (result <= 0)
                 {
-                    return NotFound($"Book with ID {id} not found or update failed");
+                    return NotFound($"Book not exist");
                 }
 
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"internal server error: {ex.Message}");
             }
         }
 
@@ -134,7 +123,7 @@ namespace BMS_API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"internal server error: {ex.Message}");
             }
         }
     }

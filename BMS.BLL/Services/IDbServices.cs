@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BMS.Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,6 @@ public interface IDbServices<T> where T : class
     public int DeleteBook(int id);
     public int UpdateBook(T entity);
     public IEnumerable<T> ViewAllBooks();
-    public int ViewBook(int id);
+    public Book ViewBook(int id);
 
 }

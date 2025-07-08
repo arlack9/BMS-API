@@ -50,7 +50,7 @@ public class DbServices : IDbServices<Book>
 
     public int UpdateBook(Book entity)
     {
-        // Add validation before updating
+       
         var authorValidation = _ival.AuthorValidation(entity.Author);
         if (authorValidation != 0)
         {
@@ -77,9 +77,9 @@ public class DbServices : IDbServices<Book>
         return _iba.ViewAllBooks();
     }
 
-    public int ViewBook(int id)
+    public Book ViewBook(int id)
     {
         var book = _iba.ViewBook(id);
-        return book != null ? 1 : 0; // Return 1 if found, 0 if not found
+        return book; // Return 1 if found, 0 if not found
     }
 }
