@@ -1,4 +1,5 @@
 using BMS.BLL.Services.Validation;
+using BMS.BLL.Services;
 using BMS.DAL.DB;
 using BMS.DAL.Repository;
 using BMS.Models.Models;
@@ -12,6 +13,7 @@ builder.Services.AddControllers();
 //DI registers
 builder.Services.AddScoped<IValidation, Validation>();
 builder.Services.AddScoped<IBookAccess<Book>, BookAccess>();
+builder.Services.AddScoped<IDbServices<Book>, DbServices>(); 
 
 //AppDbContext register
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

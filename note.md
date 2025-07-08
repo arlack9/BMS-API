@@ -316,3 +316,6 @@ The casting error was solved by these three key changes:
 ---
 
 *Generated for BMS-API Project - .NET 9 ASP.NET Core Web API*
+
+
+dotnet restore to reset and apply with current .csproj modification

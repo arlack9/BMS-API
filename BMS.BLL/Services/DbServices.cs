@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BMS.BLL.Services;
 
-internal class DbServices : IDbServices<Book>
+public class DbServices : IDbServices<Book> 
 {
     private IValidation _ival;
     private IBookAccess<Book> _iba;
@@ -19,31 +19,67 @@ internal class DbServices : IDbServices<Book>
         _iba = iba;
     }
 
-    //public Add Book
-
     public int AddBook(Book entity)
     {
-        return _iba.AddBook(entity);
+        // Add validation before saving
+        var authorValidation = _ival.AuthorValidation(entity.Author);
+        if (authorValidation != 0)
+        {
+            return -1; // Invalid author
+        }
 
+        var titleValidation = _ival.TitleValidation(entity.Title);
+        if (titleValidation != 0)
+        {
+            return -2; // Invalid title
+        }
+
+        var yearValidation = _ival.YearValidation(entity.PublishedYear);
+        if (yearValidation != 0)
+        {
+            return -3; // Invalid year
+        }
+
+        return _iba.AddBook(entity);
     }
 
     public int DeleteBook(int id)
     {
-        throw new NotImplementedException();
+        return _iba.DeleteBook(id);
     }
 
     public int UpdateBook(Book entity)
     {
-        throw new NotImplementedException();
+        // Add validation before updating
+        var authorValidation = _ival.AuthorValidation(entity.Author);
+        if (authorValidation != 0)
+        {
+            return -1; // Invalid author
+        }
+
+        var titleValidation = _ival.TitleValidation(entity.Title);
+        if (titleValidation != 0)
+        {
+            return -2; // Invalid title
+        }
+
+        var yearValidation = _ival.YearValidation(entity.PublishedYear);
+        if (yearValidation != 0)
+        {
+            return -3; // Invalid year
+        }
+
+        return _iba.UpdateBook(entity);
     }
 
     public IEnumerable<Book> ViewAllBooks()
     {
-        throw new NotImplementedException();
+        return _iba.ViewAllBooks();
     }
 
     public int ViewBook(int id)
     {
-        throw new NotImplementedException();
+        var book = _iba.ViewBook(id);
+        return book != null ? 1 : 0; // Return 1 if found, 0 if not found
     }
 }
