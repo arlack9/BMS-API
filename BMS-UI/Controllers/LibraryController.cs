@@ -4,25 +4,33 @@ using BMS.BLL.Services;
 using BMS.Models.Models;
 using BMS_UI.ViewModels;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BMS_UI.Controllers;
-
+[Authorize]
 [Route("Library")]
 public class LibraryController : Controller
     {
-        
-    private readonly IDbServices<Book> _manageBook;
+
     
-    public LibraryController(IDbServices<Book> idb)
+    private readonly IDbServices<Book> _manageBook;
+
+    private readonly UserManager<IdentityUser> _userManager;
+
+    public LibraryController(IDbServices<Book> idb , UserManager<IdentityUser> userManager)
     {
          _manageBook = idb;     
+        _userManager = userManager;
     }
 
 
-        //view all books
-        // GET: /Library
+    //view all books
+    // GET: /Library
     [HttpGet]
+    [AllowAnonymous]
+    
     public IActionResult Index()
     {
         var books = _manageBook.ViewAllBooks();
@@ -33,6 +41,8 @@ public class LibraryController : Controller
 
     //AddBook
     [HttpGet("book/")]
+    [Authorize(Roles ="Admin")]
+    
     public IActionResult AddBook ()
     {
         Console.WriteLine("just view");
@@ -40,6 +50,8 @@ public class LibraryController : Controller
     }
 
     [HttpPost("book/")]
+    [Authorize(Roles ="Admin")]
+    
     public IActionResult AddBook([FromForm] AddBook book)  
     {
         if (book == null)
@@ -83,8 +95,9 @@ public class LibraryController : Controller
 
 
     //UpdateBook
-
     [HttpGet("book/{id}")]
+    [Authorize(Roles ="Admin")]
+    
     public IActionResult UpdateBook(int id)
     {
         var book = _manageBook.ViewBook(id);
@@ -100,6 +113,8 @@ public class LibraryController : Controller
 
     // POST: /Library/ form only support post , not put 
     [HttpPost("book/{id}")]
+    [Authorize(Roles ="Admin")]
+    
     public IActionResult UpdateBook([FromForm] UpdateBook book, int id)
     {
     
@@ -127,11 +142,13 @@ public class LibraryController : Controller
 
                 return RedirectToAction("Index");
     }
-    
+
 
     //delete book by id button
     // DELETE: Library/{id}
     [HttpDelete("book/{id}")]
+    [Authorize(Roles ="Admin")]
+    
     public IActionResult DeleteBook(int id)
     {
         var result = _manageBook.DeleteBook(id);

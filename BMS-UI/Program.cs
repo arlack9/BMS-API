@@ -4,6 +4,7 @@ using BMS.DAL.DB;
 using BMS.DAL.Repository;
 using BMS.Models.Models;
 using BMS_UI.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -27,6 +28,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //Automapper register
 //builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
+//identity UI registering
+builder.Services.AddDefaultIdentity<IdentityUser>(
+    options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+}    )
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
 
 
 
@@ -39,6 +50,18 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    RoleSeeder.SeedRolesAsync(services).Wait();
+    UserSeeder.SeedUsersAsync(services).Wait();
+
+}
+
 
 app.UseHttpsRedirection();
 app.UseRouting();
