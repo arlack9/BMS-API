@@ -11,11 +11,15 @@ namespace BMS_API.Controllers
     {
         private readonly IDbServices<Book> _manageBook;
 
+
+
         public LibraryController(IDbServices<Book> idb)
         {
             _manageBook = idb;
         }
 
+
+        //view all books
         // GET: api/Library
         [HttpGet]
         public ActionResult<IEnumerable<Book>> GetAllBooks()
@@ -31,6 +35,8 @@ namespace BMS_API.Controllers
             }
         }
 
+
+        //view book by id
         // GET: api/Library/{id}
         [HttpGet("{id}")]
         public ActionResult<int> GetBook(int id)
@@ -38,7 +44,7 @@ namespace BMS_API.Controllers
             try
             {
                 var result = _manageBook.ViewBook(id);
-                if (result <= 0)
+                if (result ==null)
                 {
                     return NotFound($"Book with ID {id} not found");
                 }
@@ -50,6 +56,7 @@ namespace BMS_API.Controllers
             }
         }
 
+        //add book 
         // POST: api/Library
         [HttpPost]
         public ActionResult<int> AddBook([FromBody] Book book)
@@ -78,7 +85,8 @@ namespace BMS_API.Controllers
             }
         }
 
-        // PUT: api/Library/{id}
+        //update book
+        // PUT: api/Library/
         [HttpPut]
         public ActionResult<int> UpdateBook([FromBody] Book book)
         {
@@ -95,7 +103,7 @@ namespace BMS_API.Controllers
 
                 if (result <= 0)
                 {
-                    return NotFound($"Book not exist");
+                    return NotFound($"Book not updated");
                 }
 
                 return Ok(result);
@@ -106,6 +114,7 @@ namespace BMS_API.Controllers
             }
         }
 
+        //delete book by id
         // DELETE: api/Library/{id}
         [HttpDelete("{id}")]
         public ActionResult<int> DeleteBook(int id)
@@ -119,7 +128,7 @@ namespace BMS_API.Controllers
                     return NotFound($"Book with ID {id} not found");
                 }
 
-                return Ok(result);
+                return Ok("Book Successfully Deleted!");
             }
             catch (Exception ex)
             {
