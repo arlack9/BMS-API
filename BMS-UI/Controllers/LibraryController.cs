@@ -1,7 +1,9 @@
 ﻿
+using AutoMapper;
 using BMS.BLL.Services;
 using BMS.Models.Models;
 using BMS_UI.ViewModels;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BMS_UI.Controllers;
@@ -9,49 +11,32 @@ namespace BMS_UI.Controllers;
 [Route("Library")]
 public class LibraryController : Controller
     {
-        private readonly IDbServices<Book> _manageBook;
-
-        public LibraryController(IDbServices<Book> idb)
-        {
-            _manageBook = idb;
-        }
+        
+    private readonly IDbServices<Book> _manageBook;
+    
+    public LibraryController(IDbServices<Book> idb)
+    {
+         _manageBook = idb;     
+    }
 
 
         //view all books
         // GET: /Library
     [HttpGet]
     public IActionResult Index()
-        {
-
-                var books = _manageBook.ViewAllBooks();
-                return View(books);
-  
-        }
+    {
+        var books = _manageBook.ViewAllBooks();
+        return View(books);
+    }
 
 
 
-
-    //view book by id
-    //     GET: /Library/{id}
-    //[HttpGet("{id}")]
-    //public IActionResult GetBook(int id)
-    //{
-
-    //        var result = _manageBook.ViewBook(id);
-    //        if (result == null)
-    //        {
-    //            return NotFound($"Book with ID {id} not found");
-    //        }
-    //        return View(result);
-    //    }
-
-    //}
-
+    //AddBook
+    [HttpGet("book/")]
     public IActionResult AddBook ()
     {
         return View();
     }
-
 
     [HttpPost]
     public IActionResult AddBook([FromForm] AddBook book)  
@@ -68,13 +53,13 @@ public class LibraryController : Controller
             return View(book);
         }
 
+        //Automapper
+        //var domainBook = _mapper.Map<Book>(book);
+
+        //Mapster
+        var domainBook = book.Adapt<Book>();
+
         
-        var domainBook = new Book
-        {
-            Title = book.Title,
-            Author = book.Author,
-            PublishedYear = book.PublishedYear
-        };
 
         var result = _manageBook.AddBook(domainBook);
 
@@ -83,50 +68,45 @@ public class LibraryController : Controller
             ViewBag.BadRequest = "Book failed to add!";
             return View(book);  
         }
-
-        
-      
+ 
         TempData["SuccessMessage"] = "Book added successfully!";
         return RedirectToAction("Index");
     }
 
 
+
+    //UpdateBook
+
     [HttpGet("book/{id}")]
     public IActionResult UpdateBook(int id)
     {
-        //var book = _manageBook.ViewBook(id);
-        //if (book == null)
-        //{
-        //    return NotFound();
-        //}
+        var book = _manageBook.ViewBook(id);
+        if (book == null)
+        {
+            ViewBag.BadRequest = "Book doesnt exist!";
+        }
 
- 
 
         return View();
     }
 
 
-
-    //update book
-    // PUT: /Library/
+    // POST: /Library/ form only support post , not put 
     [HttpPost("book/{id}")]
-        public IActionResult UpdateBook([FromForm] UpdateBook book, int id)
+    public IActionResult UpdateBook([FromForm] UpdateBook book, int id)
+    {
+    
+        if (book == null)
         {
-        
-                if (book == null)
-                {
-                    ViewBag.BadRequest="Book data is required";
-                    return View();
-                }
+           ViewBag.BadRequest="Book data is required";
+           return View();
+        }
 
-        var domainBook = new Book
-        {
-            Id=book.Id,
-            Title = book.Title,
-            Author = book.Author,
-            PublishedYear = book.PublishedYear
-        };
+        //Automapper
+        //var domainBook = _mapper.Map<Book>(book);
 
+        //Mapster DTO-> Book
+        var domainBook = book.Adapt<Book>();
 
         var result = _manageBook.UpdateBook(domainBook);
 
@@ -139,17 +119,15 @@ public class LibraryController : Controller
                 TempData["SuccessMessage"] = "Book updated successfully!";
 
                 return RedirectToAction("Index");
-            
-  
-        }
+    }
     
-        //delete book by id button
-        // DELETE: Library/{id}
-        [HttpDelete("DeleteBook/{id}")]
-        public IActionResult DeleteBook(int id)
-        {
-        
-                var result = _manageBook.DeleteBook(id);
+
+    //delete book by id button
+    // DELETE: Library/{id}
+    [HttpDelete("book/{id}")]
+    public IActionResult DeleteBook(int id)
+    {
+        var result = _manageBook.DeleteBook(id);
         if (result <= 0)
         {
             ViewBag.Error = "Book Deletion Unsuccessful";
@@ -160,7 +138,7 @@ public class LibraryController : Controller
         return RedirectToAction("Index");
 
     }
-    }
+}
 
 
 

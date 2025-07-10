@@ -3,6 +3,7 @@ using BMS.BLL.Services.Validation;
 using BMS.DAL.DB;
 using BMS.DAL.Repository;
 using BMS.Models.Models;
+using BMS_UI.ViewModels;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 
-builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 //DI registers
 builder.Services.AddScoped<IValidation, Validation>();
@@ -21,6 +21,13 @@ builder.Services.AddScoped<IDbServices<Book>, DbServices>();
 //AppDbContext register
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Automapper register
+
+//builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+
+
 
 
 var app = builder.Build();
