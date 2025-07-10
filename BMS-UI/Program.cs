@@ -75,5 +75,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/")
     .WithStaticAssets();
 
-
+//for identity pages
+app.MapRazorPages();
 app.Run();
