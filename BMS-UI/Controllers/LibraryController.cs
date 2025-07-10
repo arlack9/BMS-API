@@ -35,10 +35,11 @@ public class LibraryController : Controller
     [HttpGet("book/")]
     public IActionResult AddBook ()
     {
+        Console.WriteLine("just view");
         return View();
     }
 
-    [HttpPost]
+    [HttpPost("book/")]
     public IActionResult AddBook([FromForm] AddBook book)  
     {
         if (book == null)
@@ -49,17 +50,23 @@ public class LibraryController : Controller
 
         if (!ModelState.IsValid)
         {
-            
+
             return View(book);
         }
+
+        //var domainBook = new Book()
+        //{
+        //    Title = book.Title,
+        //    Author = book.Author,
+        //    PublishedYear = book.PublishedYear
+        //};
 
         //Automapper
         //var domainBook = _mapper.Map<Book>(book);
 
         //Mapster
         var domainBook = book.Adapt<Book>();
-
-        
+        Console.WriteLine(domainBook);
 
         var result = _manageBook.AddBook(domainBook);
 

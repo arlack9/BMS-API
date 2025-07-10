@@ -5,6 +5,8 @@ using BMS.DAL.Repository;
 using BMS.Models.Models;
 using BMS_UI.ViewModels;
 using Microsoft.EntityFrameworkCore;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -23,9 +25,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //Automapper register
-
 //builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
 
 
 

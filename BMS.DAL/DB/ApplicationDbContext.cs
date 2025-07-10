@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BMS.Models.Models;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BMS.DAL.DB;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext
 
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

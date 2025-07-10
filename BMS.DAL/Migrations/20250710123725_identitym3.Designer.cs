@@ -4,6 +4,7 @@ using BMS.DAL.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BMS.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250710123725_identitym3")]
+    partial class identitym3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,29 +45,6 @@ namespace BMS.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Books");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Author = "Doyle",
-                            PublishedYear = 1979,
-                            Title = "Sherlock Holmes"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Author = "Tom",
-                            PublishedYear = 2001,
-                            Title = "Tom Holland"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Author = "Rich Burroughs",
-                            PublishedYear = 2000,
-                            Title = "Tarzan"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
