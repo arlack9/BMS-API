@@ -4,6 +4,7 @@ using BMS.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,67 +20,49 @@ public class DbServices : IDbServices<Book>
         _iba = iba;
     }
 
-    public int AddBook(Book entity)
+    public async Task AddBook(Book entity)
     {
         // Add validation before saving
         var authorValidation = _ival.AuthorValidation(entity.Author);
-        if (authorValidation != 0)
-        {
-            return -1; // Invalid author
-        }
+       
 
         var titleValidation = _ival.TitleValidation(entity.Title);
-        if (titleValidation != 0)
-        {
-            return -2; // Invalid title
-        }
+       
 
         var yearValidation = _ival.YearValidation(entity.PublishedYear);
-        if (yearValidation != 0)
-        {
-            return -3; // Invalid year
-        }
+   
 
-        return _iba.AddBook(entity);
+         await _iba.AddBook(entity);
     }
 
-    public int DeleteBook(int id)
+    public async Task DeleteBook(int id)
     {
-        return _iba.DeleteBook(id);
+        await _iba.DeleteBook(id);
     }
 
-    public int UpdateBook(Book entity)
+    public async Task UpdateBook(Book entity)
     {
        
         var authorValidation = _ival.AuthorValidation(entity.Author);
-        if (authorValidation != 0)
-        {
-            return -1; // Invalid author
-        }
+       
 
         var titleValidation = _ival.TitleValidation(entity.Title);
-        if (titleValidation != 0)
-        {
-            return -2; // Invalid title
-        }
+       
 
         var yearValidation = _ival.YearValidation(entity.PublishedYear);
-        if (yearValidation != 0)
-        {
-            return -3; // Invalid year
-        }
+       
 
-        return _iba.UpdateBook(entity);
+        await _iba.UpdateBook(entity);
     }
 
-    public IEnumerable<Book> ViewAllBooks()
+    public async Task <IEnumerable<Book>> ViewAllBooks()
     {
-        return _iba.ViewAllBooks();
+        return await _iba.ViewAllBooks();
     }
 
-    public Book ViewBook(int id)
+    public async Task<Book> ViewBook(int id)
     {
-        var book = _iba.ViewBook(id);
-        return book; // Return 1 if found, 0 if not found
+        return await _iba.ViewBook(id);
+        
     }
 }

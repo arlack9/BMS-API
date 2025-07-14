@@ -55,7 +55,7 @@ if (!app.Environment.IsDevelopment())
 
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
+    var services = scope.ServiceProvider; 
 
     RoleSeeder.SeedRolesAsync(services).Wait();
     UserSeeder.SeedUsersAsync(services).Wait();
@@ -74,6 +74,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/")
     .WithStaticAssets();
+
+
 
 //for identity pages
 app.MapRazorPages();

@@ -1,5 +1,6 @@
 ﻿using BMS.DAL.DB;
 using BMS.Models.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,40 +16,43 @@ public class BookAccess : IBookAccess<Book>
     {
         _context = context;   
     }
-    public int AddBook(Book entity)
+    public async Task AddBook(Book entity)
     {
-        _context.Books.Add(entity);
-        return _context.SaveChanges();//returns integer count of entries modified
+        await _context.Books.AddAsync(entity);
+        await _context.SaveChangesAsync();//returns integer count of entries modified
     }
 
-    public int DeleteBook(int id)
+    public async Task DeleteBook(int id)
     {
         var book=_context.Books.Find(id);
-        if(book==null)
-        {
-            return -1;
-        }
-        _context.Books.Remove(book);
-        return _context.SaveChanges();
+        //if (book == null)
+        //{
+        //    return -1;
+        //}
+        var res=  _context.Books.Remove(book);
+      await _context.SaveChangesAsync();
+       
 
     }
 
-    public int UpdateBook(Book entity)
+    public async Task UpdateBook(Book entity)
     {
         _context.Books.Update(entity);
-        return _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public IEnumerable<Book> ViewAllBooks()
+    public async Task <IEnumerable<Book>> ViewAllBooks()
     {
-        return _context.Books.ToList<Book>();
+        return await _context.Books.ToListAsync();
         
     }
 
-    public Book ViewBook(int id) { 
+    public async Task <Book>ViewBook(int id) { 
 
-        return _context.Books.Find(id);
+        return await _context.Books.FindAsync(id);
     }
+
+
 
     // Book IBookAccess<Book>.ViewBook(int id) //no public keyword explicit interface implemtnation
     //{

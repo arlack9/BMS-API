@@ -9,10 +9,10 @@ namespace BMS.DAL.Repository;
 public interface IBookAccess<T> where T : class
 {
 
-    public int AddBook(T entity);
-    public int DeleteBook(int id);
-    public int UpdateBook(T entity);
-    public IEnumerable<T> ViewAllBooks();
-    public T ViewBook(int id);
+    public Task AddBook(T entity);
+    public Task DeleteBook(int id);
+    public Task UpdateBook(T entity);
+    public Task<IEnumerable<T>> ViewAllBooks();
+    public Task<T> ViewBook(int id);
 
 }

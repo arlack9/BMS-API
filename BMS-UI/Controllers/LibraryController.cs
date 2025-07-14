@@ -31,9 +31,9 @@ public class LibraryController : Controller
     [HttpGet]
     [AllowAnonymous]
     
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var books = _manageBook.ViewAllBooks();
+        var books = await _manageBook.ViewAllBooks();
         return View(books);
     }
 
@@ -43,7 +43,7 @@ public class LibraryController : Controller
     [HttpGet("book/")]
     [Authorize(Roles ="Admin")]
     
-    public IActionResult AddBook ()
+    public async Task<IActionResult> AddBook ()
     {
         Console.WriteLine("just view");
         return View();
@@ -52,7 +52,7 @@ public class LibraryController : Controller
     [HttpPost("book/")]
     [Authorize(Roles ="Admin")]
     
-    public IActionResult AddBook([FromForm] AddBook book)  
+    public async Task<IActionResult> AddBook([FromForm] AddBook book)  
     {
         if (book == null)
         {
@@ -80,13 +80,13 @@ public class LibraryController : Controller
         var domainBook = book.Adapt<Book>();
         Console.WriteLine(domainBook);
 
-        var result = _manageBook.AddBook(domainBook);
+         await _manageBook.AddBook(domainBook);
 
-        if (result <= 0)
-        {
-            ViewBag.BadRequest = "Book failed to add!";
-            return View(book);  
-        }
+        //if (result <= 0)
+        //{
+        //    ViewBag.BadRequest = "Book failed to add!";
+        //    return View(book);  
+        //}
  
         TempData["SuccessMessage"] = "Book added successfully!";
         return RedirectToAction("Index");
@@ -98,7 +98,7 @@ public class LibraryController : Controller
     [HttpGet("book/{id}")]
     [Authorize(Roles ="Admin")]
     
-    public IActionResult UpdateBook(int id)
+    public async Task<IActionResult> UpdateBook(int id)
     {
         var book = _manageBook.ViewBook(id);
         if (book == null)
@@ -115,7 +115,7 @@ public class LibraryController : Controller
     [HttpPost("book/{id}")]
     [Authorize(Roles ="Admin")]
     
-    public IActionResult UpdateBook([FromForm] UpdateBook book, int id)
+    public async Task<IActionResult> UpdateBook([FromForm] UpdateBook book, int id)
     {
     
         if (book == null)
@@ -130,14 +130,14 @@ public class LibraryController : Controller
         //Mapster DTO-> Book
         var domainBook = book.Adapt<Book>();
 
-        var result = _manageBook.UpdateBook(domainBook);
+        await _manageBook.UpdateBook(domainBook);
 
-                if (result <= 0)
-                {
-                    ViewBag.Error = "Book not updated";
-                }
+                //if (result <= 0)
+                //{
+                //    ViewBag.Error = "Book not updated";
+                //}
 
-                ViewBag.Rowsupdated=$"{result} no of rows updated";
+                ViewBag.Rowsupdated=$"rows updated";
                 TempData["SuccessMessage"] = "Book updated successfully!";
 
                 return RedirectToAction("Index");
@@ -149,16 +149,16 @@ public class LibraryController : Controller
     [HttpDelete("book/{id}")]
     [Authorize(Roles ="Admin")]
     
-    public IActionResult DeleteBook(int id)
+    public async Task<IActionResult> DeleteBook(int id)
     {
-        var result = _manageBook.DeleteBook(id);
-        if (result <= 0)
-        {
-            ViewBag.Error = "Book Deletion Unsuccessful";
-            return View();
-        }
+       await _manageBook.DeleteBook(id);
+        //if (result <= 0)
+        //{
+        //    ViewBag.Error = "Book Deletion Unsuccessful";
+        //    return View();
+        //}
 
-        ViewBag.Success = $"{result} Book Successfully Deleted!";
+        ViewBag.Success = $" Book with Id {id} Successfully Deleted!";
         return RedirectToAction("Index");
 
     }
