@@ -1,4 +1,4 @@
-﻿
+﻿@Html.AntiForgeryToken()
 
 <div class="container">
     <div class="row pt-4">
@@ -39,13 +39,14 @@
             <th>Title</th>
             <th>Author</th>
             <th>PublishedYear</th>
+            <th>Actions</th>
             </tr>
         </thead>
 
         <tbody>
             @foreach(var entry in Model)
             {
-                <tr>
+                <tr id="book-@entry.Id">
                     <td>
                        @entry.Title
                     </td>
@@ -55,10 +56,9 @@
                     <td>
                         @entry.PublishedYear
                     </td>
-                    <td>  <a asp-action="UpdateBook" asp-route-id="@entry.Id" class="btn btn-sm btn-primary">Edit</a></td>
                     <td>
+                        <a asp-action="UpdateBook" asp-route-id="@entry.Id" class="btn btn-sm btn-primary">Edit</a>
                         <button onclick="deleteBook(@entry.Id)" class="btn btn-sm btn-danger">Delete</button>
-
                     </td>
                 </tr>
             }
@@ -66,37 +66,41 @@
     </table>
 </div>
 
-
-@section Scripts
-{
+@section Scripts {
     <script>
-        function deleteBook(id)
-        {
-            if(confirm("Are you sure , want to delete this book? "+ id))
-            {
-
-                //url
-                //type (delete)
-                // success -> visually remove job posting
-                //fail -> show an error message
-
+        function deleteBook(id) {
+            if (confirm("Are you sure you want to delete this book?")) {
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                
                 $.ajax({
-
-                    url:"@Url.Action("DeleteBook", "Library")/"+id , //Libray/book/5
-                    type: "delete",
-
-                    success: function(result){
-                        $("#book-" + id).remove();
-
-
+                    url: "/Library/DeleteBook/" + id,
+                    type: "POST",
+                    data: {
+                        "__RequestVerificationToken": token
                     },
-                    error: function (err){
-                        alert("An error occurred")
+                    success: function(response) {
+
+                        if (response.success) {
+                            $("#book-" + id).fadeOut(300, function() {
+                                $(this).remove();
+                            });
+                   
+                        
+                        } else {
+                            alert("Failed to delete book: " + (response.message || "Unknown error"));
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 401) {
+                            alert("You are not authorized to delete books. Please login as an admin.");
+                        } 
+                         else {
+                            alert("Error deleting book: " + (xhr.responseText || error));
+                        }
+                        console.error("AJAX Error:", xhr, status, error);
                     }
                 });
-
             }
-
         }
     </script>
 }

@@ -24,12 +24,13 @@ public class BookAccess : IBookAccess<Book>
 
     public async Task DeleteBook(int id)
     {
-        var book=_context.Books.Find(id);
+        var book = await _context.Books.FindAsync(id);
         //if (book == null)
         //{
         //    return -1;
         //}
-        var res=  _context.Books.Remove(book);
+        var res=   _context.Books.Remove(book);
+        
       await _context.SaveChangesAsync();
        
 

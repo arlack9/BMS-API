@@ -1,5 +1,4 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using BMS.BLL.Services;
 using BMS.Models.Models;
 using BMS_UI.ViewModels;
@@ -12,16 +11,15 @@ namespace BMS_UI.Controllers;
 [Authorize]
 [Route("Library")]
 public class LibraryController : Controller
-    {
+{
 
-    
     private readonly IDbServices<Book> _manageBook;
 
     private readonly UserManager<IdentityUser> _userManager;
 
     public LibraryController(IDbServices<Book> idb , UserManager<IdentityUser> userManager)
     {
-         _manageBook = idb;     
+        _manageBook = idb;     
         _userManager = userManager;
     }
 
@@ -80,7 +78,7 @@ public class LibraryController : Controller
         var domainBook = book.Adapt<Book>();
         Console.WriteLine(domainBook);
 
-         await _manageBook.AddBook(domainBook);
+        await _manageBook.AddBook(domainBook);
 
         //if (result <= 0)
         //{
@@ -100,14 +98,16 @@ public class LibraryController : Controller
     
     public async Task<IActionResult> UpdateBook(int id)
     {
-        var book = _manageBook.ViewBook(id);
+        var book = await _manageBook.ViewBook(id);
         if (book == null)
         {
             ViewBag.BadRequest = "Book doesnt exist!";
+            return RedirectToAction("Index");
         }
 
-
-        return View();
+        // Map the Book to UpdateBook ViewModel
+        var updateBookViewModel = book.Adapt<UpdateBook>();
+        return View(updateBookViewModel);
     }
 
 
@@ -124,29 +124,28 @@ public class LibraryController : Controller
            return View();
         }
 
-        //Automapper
-        //var domainBook = _mapper.Map<Book>(book);
+        if (!ModelState.IsValid)
+        {
+            return View(book);
+        }
+
+        // Ensure the ID from the route is set on the book object
+        book.Id = id;
 
         //Mapster DTO-> Book
         var domainBook = book.Adapt<Book>();
 
         await _manageBook.UpdateBook(domainBook);
 
-                //if (result <= 0)
-                //{
-                //    ViewBag.Error = "Book not updated";
-                //}
-
-                ViewBag.Rowsupdated=$"rows updated";
-                TempData["SuccessMessage"] = "Book updated successfully!";
-
-                return RedirectToAction("Index");
+        TempData["SuccessMessage"] = "Book updated successfully!";
+        return RedirectToAction("Index");
     }
 
 
     //delete book by id button
     // DELETE: Library/{id}
-    [HttpDelete("book/{id}")]
+    [HttpPost("DeleteBook/{id}")]
+    [ValidateAntiForgeryToken]
     [Authorize(Roles ="Admin")]
     
     public async Task<IActionResult> DeleteBook(int id)
@@ -159,9 +158,14 @@ public class LibraryController : Controller
         //}
 
         ViewBag.Success = $" Book with Id {id} Successfully Deleted!";
-        return RedirectToAction("Index");
+        //return RedirectToAction("Index");
+
+        return Ok(new { success = true, message = $"Book with ID {id} deleted." });
 
     }
+
+
+
 }
 
 
