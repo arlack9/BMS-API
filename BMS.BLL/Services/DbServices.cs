@@ -24,15 +24,19 @@ public class DbServices : IDbServices<Book>
     {
         // Add validation before saving
         var authorValidation = _ival.AuthorValidation(entity.Author);
-       
+
 
         var titleValidation = _ival.TitleValidation(entity.Title);
-       
+
 
         var yearValidation = _ival.YearValidation(entity.PublishedYear);
-   
 
-         await _iba.AddBook(entity);
+        if (yearValidation == 0 && titleValidation == 0 && authorValidation == 0)
+            await _iba.AddBook(entity);
+
+      
+
+
     }
 
     public async Task DeleteBook(int id)
@@ -50,9 +54,10 @@ public class DbServices : IDbServices<Book>
        
 
         var yearValidation = _ival.YearValidation(entity.PublishedYear);
-       
 
-        await _iba.UpdateBook(entity);
+        if (yearValidation == 0 && titleValidation == 0 && authorValidation == 0)
+
+            await _iba.UpdateBook(entity);
     }
 
     public async Task <IEnumerable<Book>> ViewAllBooks()
