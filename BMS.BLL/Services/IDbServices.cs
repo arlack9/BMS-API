@@ -16,4 +16,9 @@ public interface IDbServices<T> where T : class
     public Task<IEnumerable<T>> ViewAllBooks();
     public Task<Book> ViewBook(int id);
 
+    public event Action<Book> BookoperationSucceeded;
+
+    public event Action<int> BookDeletionSucceeded;
+
+    public event Action<Book, int> ValidationFailed;
 }

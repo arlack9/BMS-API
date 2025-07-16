@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BMS.BLL.Services;
+using BMS.BLL.Services.EventHandlers;
 using BMS.Models.Models;
 using BMS_UI.ViewModels;
 using Mapster;
@@ -12,15 +13,25 @@ namespace BMS_UI.Controllers;
 [Route("Library")]
 public class LibraryController : Controller
 {
-
+    
     private readonly IDbServices<Book> _manageBook;
 
     private readonly UserManager<IdentityUser> _userManager;
 
-    public LibraryController(IDbServices<Book> idb , UserManager<IdentityUser> userManager)
+    private readonly LibraryEventHandlers _leh;
+
+    public LibraryController(IDbServices<Book> idb , UserManager<IdentityUser> userManager, LibraryEventHandlers leh)
     {
         _manageBook = idb;     
         _userManager = userManager;
+        _leh = leh;
+
+        //register events
+        
+        
+        _manageBook.BookoperationSucceeded += _leh.HandleSuccess;
+        _manageBook.ValidationFailed += _leh.HandleValidationFailure;
+        _manageBook.BookDeletionSucceeded += _leh.HandleFailure;
     }
 
 
@@ -64,15 +75,7 @@ public class LibraryController : Controller
             return View(book);
         }
 
-        //var domainBook = new Book()
-        //{
-        //    Title = book.Title,
-        //    Author = book.Author,
-        //    PublishedYear = book.PublishedYear
-        //};
 
-        //Automapper
-        //var domainBook = _mapper.Map<Book>(book);
 
         //Mapster
         var domainBook = book.Adapt<Book>();
@@ -80,11 +83,6 @@ public class LibraryController : Controller
 
         await _manageBook.AddBook(domainBook);
 
-        //if (result <= 0)
-        //{
-        //    ViewBag.BadRequest = "Book failed to add!";
-        //    return View(book);  
-        //}
  
         TempData["SuccessMessage"] = "Book added successfully!";
         return RedirectToAction("Index");

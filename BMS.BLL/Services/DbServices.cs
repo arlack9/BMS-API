@@ -1,4 +1,5 @@
-﻿using BMS.BLL.Services.Validation;
+﻿using BMS.BLL.Services.EventHandlers;
+using BMS.BLL.Services.Validation;
 using BMS.DAL.Repository;
 using BMS.Models.Models;
 using System;
@@ -12,52 +13,74 @@ namespace BMS.BLL.Services;
 
 public class DbServices : IDbServices<Book> 
 {
+    //event delegates
+
+    public event Action<Book> BookoperationSucceeded;
+
+    public event Action<int> BookDeletionSucceeded;
+
+    public event Action<Book, int> ValidationFailed;
+
     private IValidation _ival;
     private IBookAccess<Book> _iba;
-    public DbServices(IValidation ival, IBookAccess<Book> iba)
+   
+    public DbServices(IValidation ival, IBookAccess<Book> iba )
     {
         _ival = ival;
         _iba = iba;
+      
     }
 
     public async Task AddBook(Book entity)
     {
         // Add validation before saving
         var authorValidation = _ival.AuthorValidation(entity.Author);
-
+       
 
         var titleValidation = _ival.TitleValidation(entity.Title);
 
 
         var yearValidation = _ival.YearValidation(entity.PublishedYear);
 
-        if (yearValidation == 0 && titleValidation == 0 && authorValidation == 0)
-            await _iba.AddBook(entity);
+        var ValidationErrors = authorValidation + titleValidation + yearValidation;
 
-      
+        if (yearValidation != 0 || titleValidation != 0 || authorValidation != 0)
+        {
+            ValidationFailed?.Invoke(entity, ValidationErrors);
+            return;
+        }
 
+        await _iba.AddBook(entity);
+        BookoperationSucceeded?.Invoke(entity);
 
     }
 
     public async Task DeleteBook(int id)
     {
         await _iba.DeleteBook(id);
+        BookDeletionSucceeded?.Invoke(id);
+        
     }
 
     public async Task UpdateBook(Book entity)
     {
        
         var authorValidation = _ival.AuthorValidation(entity.Author);
-       
 
         var titleValidation = _ival.TitleValidation(entity.Title);
-       
 
         var yearValidation = _ival.YearValidation(entity.PublishedYear);
 
-        if (yearValidation == 0 && titleValidation == 0 && authorValidation == 0)
+        var ValidationErrors = authorValidation + titleValidation + yearValidation;
 
-            await _iba.UpdateBook(entity);
+        if (yearValidation != 0 || titleValidation != 0 || authorValidation != 0)
+        {
+            ValidationFailed.Invoke(entity, ValidationErrors);
+            return;
+        }
+
+        await _iba.UpdateBook(entity);
+        BookoperationSucceeded?.Invoke(entity);
     }
 
     public async Task <IEnumerable<Book>> ViewAllBooks()
