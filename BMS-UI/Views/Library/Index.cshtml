@@ -17,6 +17,8 @@
     </div>
 </div>
 
+
+
 @* Add this block to your Index.cshtml *@
 @if (TempData["SuccessMessage"] != null)
 {
@@ -25,12 +27,16 @@
     </div>
 }
 
+
+
 @if (ViewBag.Success != null)
 {
     <div class="alert alert-success">
         @ViewBag.Success
     </div>
 }
+
+
 @model IEnumerable<Book>
 <div class="table-responsive">
     <table class="table table-striped table-hover">

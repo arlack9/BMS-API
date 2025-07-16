@@ -9,16 +9,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BMS_UI.Controllers;
+
 [Authorize]
 [Route("Library")]
 public class LibraryController : Controller
 {
-    
     private readonly IDbServices<Book> _manageBook;
-
     private readonly UserManager<IdentityUser> _userManager;
-
     private readonly LibraryEventHandlers _leh;
+
 
     public LibraryController(IDbServices<Book> idb , UserManager<IdentityUser> userManager, LibraryEventHandlers leh)
     {
@@ -51,7 +50,6 @@ public class LibraryController : Controller
     //AddBook
     [HttpGet("book/")]
     [Authorize(Roles ="Admin")]
-    
     public async Task<IActionResult> AddBook ()
     {
         Console.WriteLine("just view");
@@ -149,14 +147,10 @@ public class LibraryController : Controller
     public async Task<IActionResult> DeleteBook(int id)
     {
        await _manageBook.DeleteBook(id);
-        //if (result <= 0)
-        //{
-        //    ViewBag.Error = "Book Deletion Unsuccessful";
-        //    return View();
-        //}
+
 
         ViewBag.Success = $" Book with Id {id} Successfully Deleted!";
-        //return RedirectToAction("Index");
+     
 
         return Ok(new { success = true, message = $"Book with ID {id} deleted." });
 

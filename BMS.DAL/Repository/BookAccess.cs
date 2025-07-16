@@ -25,39 +25,34 @@ public class BookAccess : IBookAccess<Book>
     public async Task DeleteBook(int id)
     {
         var book = await _context.Books.FindAsync(id);
-        //if (book == null)
-        //{
-        //    return -1;
-        //}
-        var res=   _context.Books.Remove(book);
+        var res =   _context.Books.Remove(book);
         
       await _context.SaveChangesAsync();
        
 
     }
-
+     
     public async Task UpdateBook(Book entity)
     {
         _context.Books.Update(entity);
         await _context.SaveChangesAsync();
     }
-
+     
     public async Task <IEnumerable<Book>> ViewAllBooks()
     {
         return await _context.Books.ToListAsync();
         
     }
-
+     
     public async Task <Book>ViewBook(int id) { 
 
         return await _context.Books.FindAsync(id);
     }
-
-
+     
+     
 
     // Book IBookAccess<Book>.ViewBook(int id) //no public keyword explicit interface implemtnation
-    //{
-
+    //{public   
     //    return _context.Books.Find(id);
     //}
 }

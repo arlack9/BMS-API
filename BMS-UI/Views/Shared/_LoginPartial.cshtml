@@ -4,6 +4,7 @@
 @inject UserManager<IdentityUser> UserManager
 
 <ul class="navbar-nav">
+
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
@@ -15,6 +16,7 @@
         </form>
     </li>
 }
+
 else
 {
     <li class="nav-item">
