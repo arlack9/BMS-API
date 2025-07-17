@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BMS.BLL.Services;
+namespace BMS.BLL.Services.DbServices;
 
 public class DbServices : IDbServices<Book> 
 {

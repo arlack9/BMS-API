@@ -21,6 +21,4 @@ public class Book
     [Required]
     public int PublishedYear { get; set; }
 
-    
-
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BMS.BLL.Services;
+namespace BMS.BLL.Services.DbServices;
 
 public interface IDbServices<T> where T : class
 {
