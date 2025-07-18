@@ -21,4 +21,5 @@ public interface IDbServices<T> where T : class
     public event Action<int> BookDeletionSucceeded;
 
     public event Action<Book, int> ValidationFailed;
+    public Task<IEnumerable<Book>> BookSearch(string keywords);
 }

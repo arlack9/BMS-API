@@ -34,10 +34,19 @@ public class LibraryController : Controller
     // GET: /Library
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string keywords)
     {
+
+        if (keywords != null)
+        {
+            var SearchedBooks = await _manageBook.BookSearch(keywords);
+            return View(SearchedBooks);
+        }
+
         var books = await _manageBook.ViewAllBooks();
         return View(books);
+
+
     }
 
     // AddBook - GET

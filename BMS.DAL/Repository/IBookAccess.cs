@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BMS.Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,4 +16,5 @@ public interface IBookAccess<T> where T : class
     public Task<IEnumerable<T>> ViewAllBooks();
     public Task<T> ViewBook(int id);
 
+    public Task<IEnumerable<Book>> BookSearch(string keywords);
 }
