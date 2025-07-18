@@ -15,6 +15,28 @@
             <h2>Books</h2>
         </div>
     </div>
+    
+    <!-- Search Form -->
+    <div class="row mt-3">
+        <div class="col-12">
+            <form method="get" asp-action="Index">
+                <div class="input-group">
+                    <input type="text" name="searchTerm" class="form-control" 
+                           placeholder="Search by title, author, or year..." 
+                           value="@ViewBag.SearchTerm">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+                    {
+                        <a class="btn btn-outline-danger" asp-action="Index">
+                            <i class="bi bi-x-circle"></i> Clear
+                        </a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 
@@ -39,37 +61,58 @@
 
 @model IEnumerable<Book>
 <div class="table-responsive">
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>PublishedYear</th>
-            <th>Actions</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach(var entry in Model)
-            {
-                <tr id="book-@entry.Id">
-                    <td>
-                       @entry.Title
-                    </td>
-                    <td>
-                        @entry.Author
-                    </td>
-                    <td>
-                        @entry.PublishedYear
-                    </td>
-                    <td>
-                        <a asp-action="UpdateBook" asp-route-id="@entry.Id" class="btn btn-sm btn-primary">Edit</a>
-                        <button onclick="deleteBook(@entry.Id)" class="btn btn-sm btn-danger">Delete</button>
-                    </td>
+    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+    {
+        <p class="text-muted">Search results for: "<strong>@ViewBag.SearchTerm</strong>"</p>
+    }
+    
+    @if (Model.Any())
+    {
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>PublishedYear</th>
+                <th>Actions</th>
                 </tr>
+            </thead>
+
+            <tbody>
+                @foreach(var entry in Model)
+                {
+                    <tr id="book-@entry.Id">
+                        <td>
+                           @entry.Title
+                        </td>
+                        <td>
+                            @entry.Author
+                        </td>
+                        <td>
+                            @entry.PublishedYear
+                        </td>
+                        <td>
+                            <a asp-action="UpdateBook" asp-route-id="@entry.Id" class="btn btn-sm btn-primary">Edit</a>
+                            <button onclick="deleteBook(@entry.Id)" class="btn btn-sm btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+            {
+                <p>No books found matching your search criteria.</p>
             }
-        </tbody>
-    </table>
+            else
+            {
+                <p>No books available.</p>
+            }
+        </div>
+    }
 </div>
 
 @section Scripts {

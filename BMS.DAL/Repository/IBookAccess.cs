@@ -15,4 +15,6 @@ public interface IBookAccess<T> where T : class
     public Task<IEnumerable<T>> ViewAllBooks();
     public Task<T> ViewBook(int id);
 
+    public Task<IEnumerable<T>> BookSearch(string keywords);
+
 }

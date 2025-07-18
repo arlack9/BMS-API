@@ -8,6 +8,7 @@ using BMS.BLL.Services.EventHandlers;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using BMS.BLL.Services.DbServices;
 
 
 var builder = WebApplication.CreateBuilder(args);

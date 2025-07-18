@@ -93,4 +93,9 @@ public class DbServices : IDbServices<Book>
         return await _iba.ViewBook(id);
         
     }
+
+    public async Task<IEnumerable<Book>> BookSearch(string keywords)
+    {
+        return await _iba.BookSearch(keywords);
+    }
 }

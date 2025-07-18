@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BMS.BLL.Services;
+using BMS.BLL.Services.DbServices;
 using BMS.BLL.Services.EventHandlers;
 using BMS.Models.Models;
 using BMS_UI.ViewModels;
@@ -39,9 +40,20 @@ public class LibraryController : Controller
     [HttpGet]
     [AllowAnonymous]
     
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string searchTerm)
     {
-        var books = await _manageBook.ViewAllBooks();
+        IEnumerable<Book> books;
+        
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            books = await _manageBook.ViewAllBooks();
+        }
+        else
+        {
+            books = await _manageBook.BookSearch(searchTerm);
+        }
+
+        ViewBag.SearchTerm = searchTerm;
         return View(books);
     }
 
