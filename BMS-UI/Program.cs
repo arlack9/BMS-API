@@ -27,8 +27,11 @@ builder.Services.AddScoped<LibraryEventHandlers>();
 builder.Services.AddSingleton<ITempDataDictionaryFactory, TempDataDictionaryFactory>();
 
 //AppDbContext register
+
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(
     options =>
