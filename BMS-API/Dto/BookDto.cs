@@ -1,11 +1,14 @@
-﻿namespace BMS_UI.ViewModels;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class UpdateBook
+namespace BMS_API.Dto
 {
-        public int Id { get; set; }
+    public class BookDto
+    {
         public string Title { get; set; } = "";
+
         public string Author { get; set; } = "";
+
         public int PublishedYear { get; set; }
 
-    
+    }
 }

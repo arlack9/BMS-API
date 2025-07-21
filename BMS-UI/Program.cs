@@ -2,7 +2,7 @@ using BMS.BLL.Services.Validation;
 using BMS.DAL.DB;
 using BMS.DAL.Repository;
 using BMS.Models.Models;
-using BMS_UI.ViewModels;
+using BMS_UI.Dto;
 using BMS.BLL.Services.EventHandlers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

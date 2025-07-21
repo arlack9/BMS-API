@@ -1,9 +1,9 @@
-﻿using AutoMapper;
+﻿//using AutoMapper;
 using BMS.BLL.Services.DbServices;
 using BMS.BLL.Services.EventHandlers;
 using BMS.Models.Models;
-using BMS_UI.ViewModels;
-using Mapster;
+using BMS_UI.Dto;
+using Mapster; //automapping
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -45,8 +45,6 @@ public class LibraryController : Controller
 
         var books = await _manageBook.ViewAllBooks();
         return View(books);
-
-
     }
 
     // AddBook - GET
@@ -60,7 +58,7 @@ public class LibraryController : Controller
     // AddBook - POST
     [HttpPost("book/")]
     [Authorize(Roles ="Admin")]
-    public async Task<IActionResult> AddBook([FromForm] AddBook book)  
+    public async Task<IActionResult> AddBook([FromForm] BookDto book)  
     {
         if (book == null)
         {
@@ -92,14 +90,15 @@ public class LibraryController : Controller
             return RedirectToAction("Index");
         }
 
-        var updateBookViewModel = book.Adapt<UpdateBook>();
+        var updateBookViewModel = book.Adapt<BookDto>();
+
         return View(updateBookViewModel);
     }
 
     // UpdateBook - POST
     [HttpPost("book/{id}")]
     [Authorize(Roles ="Admin")]
-    public async Task<IActionResult> UpdateBook([FromForm] UpdateBook book, int id)
+    public async Task<IActionResult> UpdateBook([FromForm] BookDto book)
     {
         if (book == null)
         {
@@ -113,10 +112,12 @@ public class LibraryController : Controller
         }
 
      
-        book.Id = id;
+        //book.Id = id;
 
        
-        var domainBook = book.Adapt<Book>();
+        var domainBook = book.Adapt<Book>(); //automapping
+
+
         await _manageBook.UpdateBook(domainBook);
         
         return RedirectToAction("Index");
