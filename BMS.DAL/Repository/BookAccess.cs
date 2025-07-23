@@ -48,8 +48,24 @@ public class BookAccess : IBookAccess<Book>
 
         return await _context.Books.FindAsync(id);
     }
-     
-     
+
+    //added book search
+    //added search using LINQ
+    public async Task<IEnumerable<Book>> BookSearch(string keywords)
+    {
+        if (string.IsNullOrWhiteSpace(keywords))
+        {
+            return await ViewAllBooks();
+        }
+
+        return await _context.Books
+            .Where(b => b.Title.Contains(keywords) ||
+                       b.Author.Contains(keywords) ||
+                       b.PublishedYear.ToString().Contains(keywords))
+            .ToListAsync();
+    }
+
+
 
     // Book IBookAccess<Book>.ViewBook(int id) //no public keyword explicit interface implemtnation
     //{public   
