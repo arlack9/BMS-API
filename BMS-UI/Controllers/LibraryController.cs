@@ -2,6 +2,7 @@
 using BMS.BLL.Services.DbServices;
 using BMS.BLL.Services.EventHandlers;
 using BMS.Models.Models;
+using BMS_UI.Dto;
 using BMS_UI.ViewModels;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
@@ -29,6 +30,8 @@ public class LibraryController : Controller
             _manageBook.BookoperationSucceeded += _leh.HandleBookOperationSuccess;
             _manageBook.BookDeletionSucceeded += _leh.HandleBookDeletionSuccess;
             _manageBook.ValidationFailed += _leh.HandleValidationFailure;
+        _manageBook.BookupdationSucceeded += _leh.HandleBookUpdationSuccess;
+        _manageBook.BookAddSucceeded += _leh.HandleBookAdditionSuccess;
     }
 
     // GET: /Library
@@ -36,7 +39,7 @@ public class LibraryController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Index(string keywords)
     {
-
+        
         if (keywords != null)
         {
             var SearchedBooks = await _manageBook.BookSearch(keywords);
@@ -92,16 +95,18 @@ public class LibraryController : Controller
             return RedirectToAction("Index");
         }
 
-        var updateBookViewModel = book.Adapt<UpdateBook>();
+        var updateBookViewModel = book.Adapt<BookDto>();
         return View(updateBookViewModel);
     }
+
+
 
     // UpdateBook - POST
     [HttpPost("book/{id}")]
     [Authorize(Roles ="Admin")]
-    public async Task<IActionResult> UpdateBook([FromForm] UpdateBook book, int id)
+    public async Task<IActionResult> UpdateBook([FromForm] BookDto bookDto)
     {
-        if (book == null)
+        if (bookDto == null)
         {
            ViewBag.BadRequest="Book data is required";
            return View();
@@ -109,14 +114,14 @@ public class LibraryController : Controller
 
         if (!ModelState.IsValid)
         {
-            return View(book);
+            return View(bookDto);
         }
 
      
-        book.Id = id;
+        //bookDto.Id = id;
 
        
-        var domainBook = book.Adapt<Book>();
+        var domainBook = bookDto.Adapt<Book>();
         await _manageBook.UpdateBook(domainBook);
         
         return RedirectToAction("Index");

@@ -9,7 +9,6 @@ namespace BMS.BLL.Services.DbServices;
 
 public interface IDbServices<T> where T : class
 {
-
     public Task AddBook(T entity);
     public Task DeleteBook(int id);
     public Task UpdateBook(T entity);
@@ -18,8 +17,12 @@ public interface IDbServices<T> where T : class
 
     public event Action<Book> BookoperationSucceeded;
 
-    public event Action<int> BookDeletionSucceeded;
+    public event Action<Book> BookDeletionSucceeded;
 
-    public event Action<Book, int> ValidationFailed;
+    public event Action<Book,int> ValidationFailed;
+
+    public event Action<Book> BookupdationSucceeded;
+
+    public event Action<Book> BookAddSucceeded;
     public Task<IEnumerable<Book>> BookSearch(string keywords);
 }

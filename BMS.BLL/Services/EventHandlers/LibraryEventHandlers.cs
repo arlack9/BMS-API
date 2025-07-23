@@ -35,43 +35,61 @@ public class LibraryEventHandlers
     
     public void HandleBookOperationSuccess(Book book)
     {
-        Console.WriteLine($"success: Book '{book.Title}' by {book.Author} operation completed!");
+        //Console.WriteLine($"success: Book '{book.Title}' by {book.Author} operation completed!");
         
      
         var tempData = GetTempData();
         if (tempData != null)
         {
-            tempData["SuccessMessage"] = $"Book '{book.Title}' operation completed successfully!";
+            tempData["Status"] = $"Book '{book.Title}' operation completed successfully!";
         }
     }
 
     
-    public void HandleBookDeletionSuccess(int bookId)
+    public void HandleBookDeletionSuccess(Book book)
     {
-        Console.WriteLine($"Success: Book ID {bookId} deleted successfully!");
+        //Console.WriteLine($"Success: Book {book.Id} deleted successfully!");
         
        
         var tempData = GetTempData();
         if (tempData != null)
         {
-            tempData["SuccessMessage"] = $"Book with ID {bookId} deleted successfully!";
+            tempData["Status"] = $"Book with Title {book.Title} deleted successfully!";
         }
     }
 
-  
-    public void HandleValidationFailure(Book book, int no)
+
+    public void HandleValidationFailure(Book book, int result)
     {
-        Console.WriteLine($"Validation failed for '{book.Title}' ");
+        //Console.WriteLine($"Validation failed for '{book.Title}' , errorcode{result} ");
         
        
         var tempData = GetTempData();
         if (tempData != null)
         {
         
-            tempData["ValidationErrors"] = $"Validation failed for '{book.Title}'";
+            tempData["Status"] = $"Validation failed for '{book.Title}',errorcode{result}";
         }
     }
 
 
+    public void HandleBookUpdationSuccess(Book book)
+    {
+        var tempData = GetTempData();
+        if (tempData != null)
+        {
+            tempData["Status"] = $"Book '{book.Title}' Updation Success";
+        }
 
+    }
+
+    public void HandleBookAdditionSuccess(Book book)
+    {
+        var tempData=GetTempData();
+        if(tempData != null)
+        {
+            tempData["Status"] = $"Book '{book.Title}' Updation Success";
+        }
+    }
+    
 }

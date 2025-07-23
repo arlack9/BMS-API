@@ -17,7 +17,11 @@ public class DbServices : IDbServices<Book>
 
     public event Action<Book> BookoperationSucceeded;
 
-    public event Action<int> BookDeletionSucceeded;
+    public event Action<Book> BookAddSucceeded;
+
+    public event Action<Book> BookupdationSucceeded;
+
+    public event Action<Book> BookDeletionSucceeded;
 
     public event Action<Book, int> ValidationFailed;
 
@@ -31,16 +35,14 @@ public class DbServices : IDbServices<Book>
       
     }
 
+    //Event operations
     public async Task AddBook(Book entity)
     {
         // Add validation before saving
         var authorValidation = _ival.AuthorValidation(entity.Author);
-       
-
         var titleValidation = _ival.TitleValidation(entity.Title);
-
-
         var yearValidation = _ival.YearValidation(entity.PublishedYear);
+
 
         var ValidationErrors = authorValidation + titleValidation + yearValidation;
 
@@ -51,14 +53,17 @@ public class DbServices : IDbServices<Book>
         }
 
         await _iba.AddBook(entity);
-        BookoperationSucceeded?.Invoke(entity);
+        BookAddSucceeded?.Invoke(entity);
 
     }
 
     public async Task DeleteBook(int id)
     {
+        var DeletionBook = await _iba.ViewBook(id);
+
         await _iba.DeleteBook(id);
-        BookDeletionSucceeded?.Invoke(id);
+        
+        BookDeletionSucceeded?.Invoke(DeletionBook);
         
     }
 
@@ -80,8 +85,13 @@ public class DbServices : IDbServices<Book>
         }
 
         await _iba.UpdateBook(entity);
-        BookoperationSucceeded?.Invoke(entity);
+        //BookoperationSucceeded?.Invoke(entity);
+        BookupdationSucceeded?.Invoke(entity);
     }
+
+
+
+    //Eventless operations
 
     public async Task <IEnumerable<Book>> ViewAllBooks()
     {

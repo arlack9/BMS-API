@@ -57,21 +57,21 @@
 
 
 @* temp-data *@
-@if (TempData["SuccessMessage"] != null)
+@if (TempData["Status"] != null)
 {
     <div class="alert alert-success">
-        @TempData["SuccessMessage"]
+        @TempData["Status"]
     </div>
 }
 
 @* view-bag *@
 
-@if (ViewBag.Success != null)
+@* @if (ViewBag.Success != null)
 {
     <div class="alert alert-success">
         @ViewBag.Success
     </div>
-}
+} *@
 
 
 @model IEnumerable<Book>
@@ -111,6 +111,12 @@
                         </td>
                         <td>
                             <a asp-action="UpdateBook" asp-route-id="@entry.Id" class="btn btn-sm btn-primary">Edit</a>
+
+                          @*   <form method="post" asp-action="UpdateBook" style="display:inline;">
+                                <input type="hidden" name="id" value="@entry.Id" />
+                                <button type="submit" class="btn btn-sm btn-primary">Edit</button>
+                            </form> *@
+
                             <button onclick="deleteBook(@entry.Id)" class="btn btn-sm btn-danger">Delete</button>
                         </td>
                     </tr>
