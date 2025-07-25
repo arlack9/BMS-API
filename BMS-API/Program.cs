@@ -1,9 +1,13 @@
 using BMS.BLL.Services.Validation;
-using BMS.BLL.Services;
 using BMS.DAL.DB;
 using BMS.DAL.Repository;
 using BMS.Models.Models;
 using Microsoft.EntityFrameworkCore;
+using BMS.BLL.Services.DbServices;
+
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using BMS_API.EventHandlers;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +17,11 @@ builder.Services.AddControllers();
 //DI registers
 builder.Services.AddScoped<IValidation, Validation>();
 builder.Services.AddScoped<IBookAccess<Book>, BookAccess>();
-builder.Services.AddScoped<IDbServices<Book>, DbServices>(); 
+builder.Services.AddScoped<IDbServices<Book>, DbServices>();
+
+builder.Services.AddScoped<LibraryEventHandlers>();
+
+
 
 //AppDbContext register
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

@@ -1,8 +1,7 @@
-﻿using AutoMapper;
-using BMS.BLL.Services.DbServices;
-using BMS.BLL.Services.EventHandlers;
+﻿using BMS.BLL.Services.DbServices;
 using BMS.Models.Models;
 using BMS_UI.Dto;
+using BMS_UI.EventHandlers;
 using BMS_UI.ViewModels;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
@@ -135,8 +134,8 @@ public class LibraryController : Controller
     {
        
         await _manageBook.DeleteBook(id);
-        
-        return Ok(new { success = true, message = "Operation completed" });
+
+        return RedirectToAction("Index");
     }
 }
 

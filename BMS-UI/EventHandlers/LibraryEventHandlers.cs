@@ -1,5 +1,6 @@
 ﻿using BMS.Models.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
@@ -7,22 +8,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BMS.BLL.Services.EventHandlers;
+namespace BMS_UI.EventHandlers;
 
 public class LibraryEventHandlers
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ITempDataDictionaryFactory _tempDataFactory;
 
-   
+
     public LibraryEventHandlers(IHttpContextAccessor httpContextAccessor, ITempDataDictionaryFactory tempDataFactory)
     {
         _httpContextAccessor = httpContextAccessor;
         _tempDataFactory = tempDataFactory;
     }
 
-    
-    private ITempDataDictionary GetTempData()
+
+    public ITempDataDictionary GetTempData()
     {
         var httpContext = _httpContextAccessor.HttpContext;
         if (httpContext != null)
@@ -42,6 +43,7 @@ public class LibraryEventHandlers
         if (tempData != null)
         {
             tempData["Status"] = $"Book '{book.Title}' operation completed successfully!";
+            
         }
     }
 

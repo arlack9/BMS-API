@@ -3,11 +3,11 @@ using BMS.DAL.DB;
 using BMS.DAL.Repository;
 using BMS.Models.Models;
 using BMS_UI.ViewModels;
-using BMS.BLL.Services.EventHandlers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BMS.BLL.Services.DbServices;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using BMS_UI.EventHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 

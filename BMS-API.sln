@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36221.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMS-API", "BMS-API\BMS-API.csproj", "{450DC8A5-7D52-40A8-9E98-C37D032D8FEB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMS_API", "BMS-API\BMS_API.csproj", "{450DC8A5-7D52-40A8-9E98-C37D032D8FEB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BMS.DAL", "BMS.DAL\BMS.DAL.csproj", "{76015FCC-1027-4F65-9686-860B98951C46}"
 EndProject
