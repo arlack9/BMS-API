@@ -12,19 +12,18 @@ namespace BMS_API.EventHandlers;
 
 public class LibraryEventHandlers
 {
-  public Dictionary<string,string> tempData =new();
+  public Dictionary<string,string> tempData =new() {  };
     
     public void HandleBookOperationSuccess(Book book)
     {
         //Console.WriteLine($"success: Book '{book.Title}' by {book.Author} operation completed!");
 
-        var tempData = new Dictionary<string, string>();
+
         //var tempData = GetTempData();
-        if (tempData != null)
-        {
-            tempData["Status"] = $"Book '{book.Title}' operation completed successfully!";
+
+            tempData["status"] = $"Book '{book.Title}' operation completed successfully!";
             
-        }
+
     }
 
     
@@ -32,10 +31,8 @@ public class LibraryEventHandlers
     {
         //Console.WriteLine($"Success: Book {book.Id} deleted successfully!");
 
-        if (tempData != null)
-        {
-            tempData["Status"] = $"Book with Title {book.Title} deleted successfully!";
-        }
+            tempData["status"] = $"Book with Title {book.Title} deleted successfully!";
+    
     }
 
 
@@ -43,29 +40,25 @@ public class LibraryEventHandlers
     {
         //Console.WriteLine($"Validation failed for '{book.Title}' , errorcode{result} ");
         
-        if (tempData != null)
-        {
         
-            tempData["Status"] = $"Validation failed for '{book.Title}',errorcode{result}";
-        }
+            tempData["status"] = $"Validation failed for '{book.Title}',errorcode{result}";
+   
     }
 
 
     public void HandleBookUpdationSuccess(Book book)
     {
-        if (tempData != null)
-        {
-            tempData["Status"] = $"Book '{book.Title}' Updation Success";
-        }
+ 
+            tempData["status"] = $"Book '{book.Title}' Updation Success";
+
 
     }
 
     public void HandleBookAdditionSuccess(Book book)
     {
-        if(tempData != null)
-        {
-            tempData["Status"] = $"Book '{book.Title}' Updation Success";
-        }
+
+            tempData["status"] = $"Book '{book.Title}' Added Successfully";
+        
     }
     
 }

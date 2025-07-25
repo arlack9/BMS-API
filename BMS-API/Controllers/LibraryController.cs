@@ -1,9 +1,10 @@
 ﻿
 using BMS.BLL.Services;
 using BMS.BLL.Services.DbServices;
-
+using Mapster;
 using BMS.Models.Models;
 using BMS_API.EventHandlers;
+using BMS_API.Dto;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -43,11 +44,11 @@ public class LibraryController : ControllerBase
     //view all books
     // GET: api/Library
     [HttpGet]
-    public ActionResult<IEnumerable<Book>> GetAllBooks()
+    public async Task<IActionResult> GetAllBooks()
     {
         try
         {
-            var books = _manageBook.ViewAllBooks();
+            var books = await _manageBook.ViewAllBooks();
             return Ok(books);
         }
         catch (Exception ex)
@@ -60,11 +61,11 @@ public class LibraryController : ControllerBase
     //view book by id
     // GET: api/Library/{id}
     [HttpGet("{id}")]
-    public ActionResult<int> GetBook(int id)
+    public async Task <IActionResult> GetBook(int id)
     {
         try
         {
-            var result =_manageBook.ViewBook(id);
+            var result = await _manageBook.ViewBook(id);
 
             return Ok(result);
         }
@@ -81,21 +82,24 @@ public class LibraryController : ControllerBase
     //add book 
     // POST: api/Library
     [HttpPost]
-    public ActionResult<int> AddBook([FromBody] Book book)
+    public async Task<IActionResult> AddBook([FromBody] BookDto bookDto)
     {
         try
         {
-            if (book == null)
+            if (bookDto == null)
             {
-                return BadRequest("Book data is required");
+                return  BadRequest("Book data is required");
             }
 
-            _manageBook.AddBook(book);
+            //map BookDto to Book
+            var book = bookDto.Adapt<Book>();
 
+            //trigger events
+            await _manageBook.AddBook(book);
 
             //event status return
-
             var result = _leh.tempData["status"];
+            Console.WriteLine($"status during post: {result}");
 
            return Ok(result);
 
@@ -110,20 +114,23 @@ public class LibraryController : ControllerBase
     //update book
     // PUT: api/Library/
     [HttpPut]
-    public ActionResult<int> UpdateBook([FromBody] Book book)
+    public async Task<IActionResult> UpdateBook([FromBody] BookDto bookDto)
     {
         try
         {
-            if (book == null)
+            if (bookDto == null)
             {
                 return BadRequest("Book data is required");
             }
 
-           
-            //trigger events 
-            _manageBook.UpdateBook(book);
 
+            //map BookDto to Book
+            var book = bookDto.Adapt<Book>();
+            
+            //trigger event
+            await _manageBook.UpdateBook(book);
 
+            //return status
             var result = _leh.tempData["status"];
             return Ok(result);
         }
@@ -136,15 +143,16 @@ public class LibraryController : ControllerBase
     //delete book by id
     // DELETE: api/Library/{id}
     [HttpDelete("{id}")]
-    public ActionResult<int> DeleteBook(int id)
+    public async Task<IActionResult> DeleteBook(int id)
     {
         try
         {
-            _manageBook.DeleteBook(id);
+            await _manageBook.DeleteBook(id);
 
+
+            
             //event returning
-
-            var result = _leh.tempData["Status"];
+            var result = _leh.tempData["status"];
             return Ok(result);
 
         }

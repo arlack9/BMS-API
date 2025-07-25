@@ -5,7 +5,6 @@ using BMS.Models.Models;
 using Microsoft.EntityFrameworkCore;
 using BMS.BLL.Services.DbServices;
 
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using BMS_API.EventHandlers;
 
 
@@ -24,8 +23,12 @@ builder.Services.AddScoped<LibraryEventHandlers>();
 
 
 //AppDbContext register
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Sqlite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //Swagger registers
 builder.Services.AddEndpointsApiExplorer(); // Required
@@ -34,12 +37,11 @@ builder.Services.AddSwaggerGen();           // swagger generator
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
-{
-    //app.MapOpenApi();
+{ 
     app.UseSwagger();
     app.UseSwaggerUI();
 }
