@@ -27,9 +27,9 @@ public class LibraryController : Controller
 
 
         //events manage 
-            _manageBook.BookoperationSucceeded += _leh.HandleBookOperationSuccess;
-            _manageBook.BookDeletionSucceeded += _leh.HandleBookDeletionSuccess;
-            _manageBook.ValidationFailed += _leh.HandleValidationFailure;
+        _manageBook.BookoperationSucceeded += _leh.HandleBookOperationSuccess;
+        _manageBook.BookDeletionSucceeded += _leh.HandleBookDeletionSuccess;
+        _manageBook.ValidationFailed += _leh.HandleValidationFailure;
         _manageBook.BookupdationSucceeded += _leh.HandleBookUpdationSuccess;
         _manageBook.BookAddSucceeded += _leh.HandleBookAdditionSuccess;
     }
