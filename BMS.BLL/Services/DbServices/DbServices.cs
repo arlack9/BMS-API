@@ -1,10 +1,12 @@
 ﻿
+using BMS.BLL.Dto;
 using BMS.BLL.Services.Validation;
 using BMS.DAL.Repository;
 using BMS.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,19 +41,24 @@ public class DbServices : IDbServices<Book>
     public async Task AddBook(Book entity)
     {
         // Add validation before saving
+
+        //pass this model to the class completely -objective
         var authorValidation = _ival.AuthorValidation(entity.Author);
         var titleValidation = _ival.TitleValidation(entity.Title);
         var yearValidation = _ival.YearValidation(entity.PublishedYear);
-
-
         var ValidationErrors = authorValidation + titleValidation + yearValidation;
 
-        if (yearValidation != 0 || titleValidation != 0 || authorValidation != 0)
+        //check duplication
+        var DuplicationCheck = await _ival.DuplicationValidation(entity);
+
+
+        if (yearValidation != 0 || titleValidation != 0 || authorValidation != 0 || DuplicationCheck is true)
         {
             ValidationFailed?.Invoke(entity, ValidationErrors);
             return;
         }
 
+        //db apply
         await _iba.AddBook(entity);
         BookAddSucceeded?.Invoke(entity);
 
@@ -104,8 +111,20 @@ public class DbServices : IDbServices<Book>
         
     }
 
-    public async Task<IEnumerable<Book>> BookSearch(string keywords)
+    //public async Task<IEnumerable<Book>> BookSearch(string keywords)
+    //{
+    //           return await _iba.BookSearch(keywords);
+    //}
+
+    public async Task<IEnumerable<Book>> SearchBooks(string keywords)
     {
-               return await _iba.BookSearch(keywords);
+        //throw new NotImplementedException();
+        return await _iba.SearchBooks(x=> 
+                                            x.Title.Contains(keywords) ||
+                                            x.Author.Contains(keywords) ||
+                                            x.PublishedYear.ToString().Contains(keywords));
     }
+
+
+
 }

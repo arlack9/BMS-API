@@ -1,4 +1,4 @@
-﻿namespace BMS_API.Dto;
+﻿namespace BMS.BLL.Dto;
 
 public class BookDto
 {

@@ -58,6 +58,23 @@ public class LibraryController : ControllerBase
     }
 
 
+    //search books by keyword
+    [HttpGet("{keywords}")]
+    public async Task <IActionResult> SearchBook(string keywords)
+    {
+        try
+        {
+           var result= await _manageBook.SearchBooks(keywords);
+            return Ok(result);
+        }
+
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal Server error{ex}");
+        }
+    }
+
+
     //view book by id
     // GET: api/Library/{id}
     [HttpGet("{id}")]

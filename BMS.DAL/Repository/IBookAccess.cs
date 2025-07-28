@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,5 +17,8 @@ public interface IBookAccess<T> where T : class
     public Task<IEnumerable<T>> ViewAllBooks();
     public Task<T> ViewBook(int id);
 
-    public Task<IEnumerable<Book>> BookSearch(string keywords);
+    //public Task<IEnumerable<Book>> BookSearch(string keywords);
+
+    public Task<bool> BookExists(Expression<Func<Book, bool>> predicate);
+    public Task<List<Book>> SearchBooks(Expression<Func<Book, bool>> predicate);
 }

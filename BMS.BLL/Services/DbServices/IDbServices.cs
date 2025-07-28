@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,5 +25,7 @@ public interface IDbServices<T> where T : class
     public event Action<Book> BookupdationSucceeded;
 
     public event Action<Book> BookAddSucceeded;
-    public Task<IEnumerable<Book>> BookSearch(string keywords);
+    //public Task<IEnumerable<Book>> BookSearch(string keywords);
+
+    public Task<IEnumerable<Book>> SearchBooks(string keywords);
 }

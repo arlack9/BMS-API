@@ -1,6 +1,10 @@
-﻿using System;
+﻿using BMS.BLL.Dto;
+using BMS.DAL.Repository;
+using BMS.Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +12,12 @@ namespace BMS.BLL.Services.Validation;
 
 public class Validation : IValidation
 {
+    private IBookAccess<InsertBookDto> _iba;
+
+    public Validation(IBookAccess<InsertBookDto> iba)
+    {
+        _iba = iba;
+    }
     public int AuthorValidation(string author)
     {
         // Return codes: 0 = valid, 1 = null/empty, 2 = contains numbers, 3 = too short, 4 = too long
@@ -33,6 +43,8 @@ public class Validation : IValidation
 
         return 0; // Valid
     }
+
+ 
 
     public int TitleValidation(string title)
     {
@@ -71,5 +83,20 @@ public class Validation : IValidation
         }
 
         return 0; // Valid
+    }
+
+
+
+    public async Task<bool> DuplicationValidation(Book book)
+    {
+        //throw new NotImplementedException();
+
+        var result = await _iba.BookExists(x=> 
+                                                x.Title==book.Title &&
+                                                x.PublishedYear==book.PublishedYear &&
+                                                x.Author==book.Author);
+
+
+        return result; //true; //Duplication found //false; //no Duplication
     }
 }
