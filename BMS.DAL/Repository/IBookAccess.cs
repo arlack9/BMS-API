@@ -20,5 +20,5 @@ public interface IBookAccess<T> where T : class
     //public Task<IEnumerable<Book>> BookSearch(string keywords);
 
     public Task<bool> BookExists(Expression<Func<Book, bool>> predicate);
-    public Task<List<Book>> SearchBooks(Expression<Func<Book, bool>> predicate);
+    public Task<IEnumerable<Book>> SearchBooks(Expression<Func<Book, bool>> predicate);
 }

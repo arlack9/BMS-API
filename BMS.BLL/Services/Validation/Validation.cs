@@ -12,9 +12,9 @@ namespace BMS.BLL.Services.Validation;
 
 public class Validation : IValidation
 {
-    private IBookAccess<InsertBookDto> _iba;
+    private IBookAccess<Book> _iba;
 
-    public Validation(IBookAccess<InsertBookDto> iba)
+    public Validation(IBookAccess<Book> iba)
     {
         _iba = iba;
     }
@@ -23,22 +23,22 @@ public class Validation : IValidation
         // Return codes: 0 = valid, 1 = null/empty, 2 = contains numbers, 3 = too short, 4 = too long
         if (string.IsNullOrWhiteSpace(author))
         {
-            return 1; // Invalid: null, empty, or whitespace
+            return 100; // Invalid: null, empty, or whitespace
         }
 
         if (author.Any(char.IsDigit))
         {
-            return 2; // Invalid: contains numbers
+            return 200; // Invalid: contains numbers
         }
 
         if (author.Length < 2)
         {
-            return 3; // Invalid: too short
+            return 300; // Invalid: too short
         }
 
         if (author.Length > 100)
         {
-            return 4; // Invalid: too long
+            return 400; // Invalid: too long
         }
 
         return 0; // Valid
@@ -51,17 +51,17 @@ public class Validation : IValidation
         // Return codes: 0 = valid, 1 = null/empty, 2 = too short, 3 = too long
         if (string.IsNullOrWhiteSpace(title))
         {
-            return 1; // Invalid: null, empty, or whitespace
+            return 10; // Invalid: null, empty, or whitespace
         }
 
         if (title.Length < 1)
         {
-            return 2; // Invalid: too short
+            return 20; // Invalid: too short
         }
 
         if (title.Length > 200)
         {
-            return 3; // Invalid: too long
+            return 30; // Invalid: too long
         }
 
         return 0; // Valid

@@ -69,7 +69,7 @@ public class BookAccess : IBookAccess<Book>
     }
 
     //check using LINQ from BLL and return Books List
-    public async Task<List<Book>> SearchBooks(Expression<Func<Book, bool>> predicate)
+    public async Task<IEnumerable<Book>> SearchBooks(Expression<Func<Book, bool>> predicate)
     {
         return await _context.Books.Where(predicate).ToListAsync();
     }

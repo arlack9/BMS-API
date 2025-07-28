@@ -59,7 +59,7 @@ public class LibraryController : ControllerBase
 
 
     //search books by keyword
-    [HttpGet("{keywords}")]
+    [HttpGet("search/{keywords}")]
     public async Task <IActionResult> SearchBook(string keywords)
     {
         try
