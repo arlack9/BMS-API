@@ -71,8 +71,8 @@ public class LibraryController : ControllerBase
 
     //API-LOGIN
     //POST:api/Login
-   
-
+    
+    
     [HttpPost("login")]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
@@ -174,10 +174,10 @@ public class LibraryController : ControllerBase
     }
 
 
-    //search books by keyword
-    [HttpGet("search/{keywords}")]
+ 
+    [HttpGet("search")]
     [AllowAnonymous]
-    public async Task <IActionResult> SearchBook(string keywords)
+    public async Task <IActionResult> SearchBook([FromQuery] string keywords)
     {
         try
         {
@@ -259,7 +259,6 @@ public class LibraryController : ControllerBase
             {
                 return BadRequest("Book data is required");
             }
-
 
             //map BookDto to Book
             var book = bookDto.Adapt<Book>();

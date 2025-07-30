@@ -23,6 +23,7 @@ builder.Services.AddScoped<IDbServices<Book>, DbServices>();
 
 builder.Services.AddScoped<LibraryEventHandlers>();
 
+//sql
 //AppDbContext register
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -85,12 +86,9 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
-
-
 app.UseAuthentication();
 
 app.UseAuthorization();
-
 
 app.MapControllers();
 

@@ -34,7 +34,6 @@ public class DbServices : IDbServices<Book>
     {
         _ival = ival;
         _iba = iba;
-      
     }
 
     //Event operations
@@ -42,7 +41,7 @@ public class DbServices : IDbServices<Book>
     {
         // Add validation before saving
 
-        //pass this model to the class completely -objective
+        //pass this model to the class completely - objective
         var authorValidation = _ival.AuthorValidation(entity.Author);
         var titleValidation = _ival.TitleValidation(entity.Title);
         var yearValidation = _ival.YearValidation(entity.PublishedYear);
@@ -113,10 +112,6 @@ public class DbServices : IDbServices<Book>
         
     }
 
-    //public async Task<IEnumerable<Book>> BookSearch(string keywords)
-    //{
-    //           return await _iba.BookSearch(keywords);
-    //}
 
     public async Task<IEnumerable<Book>> SearchBooks(string keywords)
     {
@@ -128,5 +123,6 @@ public class DbServices : IDbServices<Book>
     }
 
 
+    
 
 }
