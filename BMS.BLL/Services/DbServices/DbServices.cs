@@ -85,7 +85,9 @@ public class DbServices : IDbServices<Book>
 
         var ValidationErrors = authorValidation + titleValidation + yearValidation;
 
-        if (yearValidation != 0 || titleValidation != 0 || authorValidation != 0)
+        var DuplicationCheck = await _ival.DuplicationValidation(entity);
+
+        if (yearValidation != 0 || titleValidation != 0 || authorValidation != 0 || DuplicationCheck is true)
         {
             ValidationFailed.Invoke(entity, ValidationErrors);
             return;

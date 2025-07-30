@@ -58,9 +58,6 @@ public class BookAccess : IBookAccess<Book>
         return await _context.Books.FindAsync(id);
     }
 
- 
-
-
 
     //Check whether book exist return boolean , takes linq predicate
     public async Task <bool> BookExists(Expression<Func<Book,bool>> predicate)
@@ -75,19 +72,5 @@ public class BookAccess : IBookAccess<Book>
     }
 
 
-    //deprecated moved to BLL
-    //added book search using LINQ
-    //public async Task<IEnumerable<Book>> BookSearch(string keywords)
-    //{
-    //    if (string.IsNullOrWhiteSpace(keywords))
-    //    {
-    //        return await ViewAllBooks();
-    //    }
-
-    //    return await _context.Books
-    //        .Where(b => b.Title.Contains(keywords) ||
-    //                   b.Author.Contains(keywords) ||
-    //                   b.PublishedYear.ToString().Contains(keywords))
-    //        .ToListAsync();
-    //}
+ 
 }
