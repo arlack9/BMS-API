@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BMS.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250725063649_m1")]
+    [Migration("20250730070918_m1")]
     partial class m1
     {
         /// <inheritdoc />

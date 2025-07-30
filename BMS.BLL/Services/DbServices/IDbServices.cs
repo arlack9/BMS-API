@@ -25,7 +25,6 @@ public interface IDbServices<T> where T : class
     public event Action<Book> BookupdationSucceeded;
 
     public event Action<Book> BookAddSucceeded;
-    //public Task<IEnumerable<Book>> BookSearch(string keywords);
 
     public Task<IEnumerable<Book>> SearchBooks(string keywords);
 }
