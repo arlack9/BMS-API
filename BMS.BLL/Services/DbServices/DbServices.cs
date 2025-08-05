@@ -1,5 +1,5 @@
 ﻿
-using BMS.BLL.Dto;
+//using BMS.BLL.Dto;
 using BMS.BLL.Services.Validation;
 using BMS.DAL.Repository;
 using BMS.Models.Models;
@@ -16,7 +16,7 @@ namespace BMS.BLL.Services.DbServices;
 public class DbServices : IDbServices<Book> 
 {
     //event delegates
-
+    //public event Action<Book> Angel;
     public event Action<Book> BookoperationSucceeded;
 
     public event Action<Book> BookAddSucceeded;
@@ -120,6 +120,9 @@ public class DbServices : IDbServices<Book>
                                             x.Title.Contains(keywords) ||
                                             x.Author.Contains(keywords) ||
                                             x.PublishedYear.ToString().Contains(keywords));
+
+
+        //predicate passed like x=> x.Title.Contains(keywords) ||x.Author.Contains(keywords) ||x.PublishedYear.ToString().Contains(keywords)
     }
 
 

@@ -31,7 +31,6 @@ public class LibraryEventHandlers
 
     public void HandleValidationFailure(Book book, int result)
     {
-        //Console.WriteLine($"Validation failed for '{book.Title}' , errorcode{result} ");
             tempData["status"] = $"Validation failed for '{book.Title}',errorcode{result}";
     }
 

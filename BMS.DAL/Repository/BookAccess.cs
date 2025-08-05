@@ -65,11 +65,16 @@ public class BookAccess : IBookAccess<Book>
         return await _context.Books.AnyAsync(predicate);
     }
 
+
+
     //check using LINQ from BLL and return Books List
     public async Task<IEnumerable<Book>> SearchBooks(Expression<Func<Book, bool>> predicate)
     {
         return await _context.Books.Where(predicate).ToListAsync();
     }
+
+
+    //NO linq operations logics written here 
 
 
  

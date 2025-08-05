@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BMS.BLL.Dto;
+namespace BMS_API.Dto;
 
 public class InsertBookDto
 {

@@ -14,18 +14,18 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using static BMS_API.Constants.Constants;
+using static BMS_API.Constants.Constants; //custom class to svae constants , key-values
 
 namespace BMS_API.Controllers;
 
 
 [ApiController]
 [Route("api/[controller]")]
-public class LibraryController : ControllerBase
+public class LibraryController : ControllerBase  //MVC-UI-Controller //API-ControllerBase
 {
     //BLL
-    private readonly IDbServices<Book> _manageBook;
-    private readonly LibraryEventHandlers _leh;
+    private readonly IDbServices<Book> _manageBook; //here already events are declared 
+    private readonly LibraryEventHandlers _leh;  //here events actionsa are defined
 
     //identity
     private readonly UserManager<IdentityUser> _usermanager;
@@ -33,22 +33,28 @@ public class LibraryController : ControllerBase
     //configuration
     private readonly IConfiguration _config;
 
+    //private readonly int _k ;
+
 
     //--------------------------------------------constructor-start-----------------------------
     public LibraryController(
         
         //BLL injection
-        IDbServices<Book> idb , LibraryEventHandlers leh,
+        IDbServices<Book> idb, //CRUD operations  //here already events are declared 
+
+
+        LibraryEventHandlers leh, //Error handling
 
         //Identity 
-        UserManager<IdentityUser> usermanager, 
+        UserManager<IdentityUser> usermanager, //User credentials from identity tables
   
 
         //configuration read from appsettings 
-        IConfiguration config
+        IConfiguration config //Read jwt token
         )
 
-    {
+
+        {
         //BLL
         _manageBook = idb;
         _leh = leh;
@@ -59,8 +65,12 @@ public class LibraryController : ControllerBase
         //configuration
         _config = config;
 
+        //catch(Exception ex)
+        //printex.error
+
         //register events to methods
         _manageBook.BookAddSucceeded += _leh.HandleBookAdditionSuccess;
+        //_manageBook.BookAddSucceeded += _leh.HandleBookOperationSuccess
         _manageBook.BookDeletionSucceeded += _leh.HandleBookDeletionSuccess;
         _manageBook.BookupdationSucceeded += _leh.HandleBookUpdationSuccess;
         _manageBook.ValidationFailed += _leh.HandleValidationFailure;
@@ -75,19 +85,20 @@ public class LibraryController : ControllerBase
     
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+    public async Task<IActionResult> Login([FromBody] LoginDto loginDto) //non procedural programming , //functions procedural programming 
     {
 
         var user = await _usermanager.FindByNameAsync(loginDto.Username);
 
         var passcheck = await _usermanager.CheckPasswordAsync(user, loginDto.Password);
 
-        if (user == null || user.UserName ==null || passcheck is false)
+        if (user == null || user.UserName ==null || passcheck is false) //tight coupling  //louse coipling -events
         {
 
             return Unauthorized("Invalid User");
 
         }
+        
 
         //fetch role
         var roles = await _usermanager.GetRolesAsync(user);
@@ -105,6 +116,8 @@ public class LibraryController : ControllerBase
             {
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
+
+                //ClaimTypes.
             };
             
 
@@ -127,20 +140,20 @@ public class LibraryController : ControllerBase
         //symmetric key generation
         var key = new SymmetricSecurityKey(JwtKey);
 
-        //generating signing credentials using hamc sha256 applied on symmetrickey
+        //generating signing credentials using hamc sha256 applied on symmetrickey //digital signature
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             //generate token
             var token = new JwtSecurityToken(
 
                 //stored user credentials
-                claims: claimsList,
+                claims: claimsList, //<--user id , username
 
                 //token expiry
-                expires: TokenExpiryTime,
+                expires: TokenExpiryTime,  //<---expiry time
 
                 //credentials are used for digitally sign token
-                signingCredentials: signingCredentials
+                signingCredentials: signingCredentials   //<----jwtkey
 
                 );
 
@@ -152,7 +165,7 @@ public class LibraryController : ControllerBase
 
     }
 
-
+    //RFC compliance 
     //eventless functions
 
 
@@ -218,7 +231,7 @@ public class LibraryController : ControllerBase
     // POST: api/Library
     [HttpPost]
     [Authorize(Roles ="Admin")]
-    public async Task<IActionResult> AddBook([FromBody] BookDto bookDto)
+    public async Task<IActionResult> AddBook([FromBody] InsertBookDto bookDto)
     {
         try
         {
@@ -232,6 +245,8 @@ public class LibraryController : ControllerBase
 
             //trigger events
             await _manageBook.AddBook(book);
+
+            //event is hidden , moved to other classes include validation 
 
             //event status return
             var result = _leh.tempData["status"];
