@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BMS.BLL.Services.DbServices;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using BMS_UI.EventHandlers;
+using BMS.BLL.Services.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,7 @@ builder.Services.AddScoped<IValidation, Validation>();
 builder.Services.AddScoped<IBookAccess<Book>, BookAccess>();
 builder.Services.AddScoped<IDbServices<Book>, DbServices>();
 
-
+builder.Services.AddScoped<IEvents, Events>();
 builder.Services.AddScoped<LibraryEventHandlers>();
 
 

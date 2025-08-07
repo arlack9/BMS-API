@@ -1,4 +1,5 @@
 ﻿using BMS.BLL.Services.DbServices;
+using BMS.BLL.Services.Events;
 using BMS.Models.Models;
 using BMS_UI.Dto;
 using BMS_UI.EventHandlers;
@@ -18,19 +19,28 @@ public class LibraryController : Controller
     private readonly UserManager<IdentityUser> _userManager;
     private readonly LibraryEventHandlers _leh;
 
-    public LibraryController(IDbServices<Book> idb, UserManager<IdentityUser> userManager, LibraryEventHandlers leh)
+    private readonly IEvents _events;
+
+    public LibraryController(
+        IDbServices<Book> idb, 
+        UserManager<IdentityUser> userManager, 
+        LibraryEventHandlers leh,
+        
+        IEvents events)
     {
             _manageBook = idb;     
             _userManager = userManager;
             _leh = leh;
-
+            
+            //events
+            _events = events;
 
         //events manage 
-        _manageBook.BookoperationSucceeded += _leh.HandleBookOperationSuccess;
-        _manageBook.BookDeletionSucceeded += _leh.HandleBookDeletionSuccess;
-        _manageBook.ValidationFailed += _leh.HandleValidationFailure;
-        _manageBook.BookupdationSucceeded += _leh.HandleBookUpdationSuccess;
-        _manageBook.BookAddSucceeded += _leh.HandleBookAdditionSuccess;
+        _events.BookoperationSucceeded += _leh.HandleBookOperationSuccess;
+        _events.BookDeletionSucceeded += _leh.HandleBookDeletionSuccess;
+        _events.ValidationFailed += _leh.HandleValidationFailure;
+        _events.BookupdationSucceeded += _leh.HandleBookUpdationSuccess;
+        _events.BookAddSucceeded += _leh.HandleBookAdditionSuccess;
     }
 
     // GET: /Library
@@ -41,7 +51,7 @@ public class LibraryController : Controller
         
         if (keywords != null)
         {
-            var SearchedBooks = await _manageBook.BookSearch(keywords);
+            var SearchedBooks = await _manageBook.SearchBooks(keywords);
             return View(SearchedBooks);
         }
 
