@@ -1,5 +1,6 @@
 ﻿
 //using BMS.BLL.Dto;
+using BMS.BLL.Services.Events;
 using BMS.BLL.Services.Validation;
 using BMS.DAL.Repository;
 using BMS.Models.Models;
@@ -16,24 +17,45 @@ namespace BMS.BLL.Services.DbServices;
 public class DbServices : IDbServices<Book> 
 {
     //event delegates
-    //public event Action<Book> Angel;
-    public event Action<Book> BookoperationSucceeded;
+    //public event Action<Book> ;
+    //public event Action<Book> BookoperationSucceeded;
 
-    public event Action<Book> BookAddSucceeded;
+    //public event Action<Book> BookAddSucceeded;
 
-    public event Action<Book> BookupdationSucceeded;
+    //public event Action<Book> BookupdationSucceeded;
 
-    public event Action<Book> BookDeletionSucceeded;
+    //public event Action<Book> BookDeletionSucceeded;
 
-    public event Action<Book, int> ValidationFailed;
+    //public event Action<Book, int> ValidationFailed;
+
 
     private IValidation _ival;
     private IBookAccess<Book> _iba;
-   
-    public DbServices(IValidation ival, IBookAccess<Book> iba )
+
+
+    //events
+    private readonly IEvents _events;
+
+    public DbServices(
+        
+        //Validation
+        IValidation ival, 
+        
+        //book services
+        IBookAccess<Book> iba,
+
+        //events
+        IEvents events)
+
     {
+        //validation
         _ival = ival;
+        
+        //bookservices
         _iba = iba;
+
+        //events
+        _events = events;
     }
 
     //Event operations
@@ -53,13 +75,17 @@ public class DbServices : IDbServices<Book>
 
         if (yearValidation != 0 || titleValidation != 0 || authorValidation != 0 || DuplicationCheck is true)
         {
-            ValidationFailed?.Invoke(entity, ValidationErrors);
+            //ValidationFailed?.Invoke(entity, ValidationErrors);
+            _events.OnValidationFailed(entity, ValidationErrors);
+      
+
             return;
         }
 
         //db apply
         await _iba.AddBook(entity);
-        BookAddSucceeded?.Invoke(entity);
+        //BookAddSucceeded?.Invoke(entity);
+        _events.OnBookAddSucceeded(entity);
 
     }
 
@@ -69,7 +95,9 @@ public class DbServices : IDbServices<Book>
 
         await _iba.DeleteBook(id);
         
-        BookDeletionSucceeded?.Invoke(DeletionBook);
+        //BookDeletionSucceeded?.Invoke(DeletionBook);
+        //_events.OnBookDeletionSuccedd(DeletionBook);
+        _events.OnBookDeletionSucceeded(DeletionBook);
         
     }
 
@@ -88,13 +116,16 @@ public class DbServices : IDbServices<Book>
 
         if (yearValidation != 0 || titleValidation != 0 || authorValidation != 0 || DuplicationCheck is true)
         {
-            ValidationFailed.Invoke(entity, ValidationErrors);
+            //ValidationFailed.Invoke(entity, ValidationErrors);
+            _events.OnValidationFailed(entity, ValidationErrors);
+            
             return;
         }
 
         await _iba.UpdateBook(entity);
         //BookoperationSucceeded?.Invoke(entity);
-        BookupdationSucceeded?.Invoke(entity);
+        //BookupdationSucceeded?.Invoke(entity);
+        _events.OnBookupdationSucceeded(entity);
     }
 
 

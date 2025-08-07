@@ -1,6 +1,7 @@
 ﻿
 using BMS.BLL.Services;
 using BMS.BLL.Services.DbServices;
+using BMS.BLL.Services.Events;
 using BMS.Models.Models;
 using BMS_API.Dto;
 using BMS_API.EventHandlers;
@@ -25,6 +26,11 @@ public class LibraryController : ControllerBase  //MVC-UI-Controller //API-Contr
 {
     //BLL
     private readonly IDbServices<Book> _manageBook; //here already events are declared 
+
+    //BLL.Events
+    private readonly IEvents _events;
+
+    //api event handlers
     private readonly LibraryEventHandlers _leh;  //here events actionsa are defined
 
     //identity
@@ -33,8 +39,6 @@ public class LibraryController : ControllerBase  //MVC-UI-Controller //API-Contr
     //configuration
     private readonly IConfiguration _config;
 
-    //private readonly int _k ;
-
 
     //--------------------------------------------constructor-start-----------------------------
     public LibraryController(
@@ -42,7 +46,9 @@ public class LibraryController : ControllerBase  //MVC-UI-Controller //API-Contr
         //BLL injection
         IDbServices<Book> idb, //CRUD operations  //here already events are declared 
 
+        IEvents events,
 
+        //BMS-API. library event handlers
         LibraryEventHandlers leh, //Error handling
 
         //Identity 
@@ -57,7 +63,12 @@ public class LibraryController : ControllerBase  //MVC-UI-Controller //API-Contr
         {
         //BLL
         _manageBook = idb;
+
+        //BMS-API.library event handlers
         _leh = leh;
+
+        //BMS.BLL.Events
+        _events = events;
 
         //Identity
         _usermanager = usermanager;
@@ -69,11 +80,11 @@ public class LibraryController : ControllerBase  //MVC-UI-Controller //API-Contr
         //printex.error
 
         //register events to methods
-        _manageBook.BookAddSucceeded += _leh.HandleBookAdditionSuccess;
+        _events.BookAddSucceeded += _leh.HandleBookAdditionSuccess;
         //_manageBook.BookAddSucceeded += _leh.HandleBookOperationSuccess
-        _manageBook.BookDeletionSucceeded += _leh.HandleBookDeletionSuccess;
-        _manageBook.BookupdationSucceeded += _leh.HandleBookUpdationSuccess;
-        _manageBook.ValidationFailed += _leh.HandleValidationFailure;
+        _events.BookDeletionSucceeded += _leh.HandleBookDeletionSuccess;
+        _events.BookupdationSucceeded += _leh.HandleBookUpdationSuccess;
+        _events.ValidationFailed += _leh.HandleValidationFailure;
     }
 
     ///--------------------------------------------------------constructor-end-----------------------------------
@@ -140,7 +151,7 @@ public class LibraryController : ControllerBase  //MVC-UI-Controller //API-Contr
         //symmetric key generation
         var key = new SymmetricSecurityKey(JwtKey);
 
-        //generating signing credentials using hamc sha256 applied on symmetrickey //digital signature
+        //generating signing credentials using hmac sha256 applied on symmetrickey //digital signature
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             //generate token

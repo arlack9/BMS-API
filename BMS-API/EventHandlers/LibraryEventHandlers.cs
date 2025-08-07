@@ -18,7 +18,7 @@ public class LibraryEventHandlers
     {
         //Console.WriteLine($"success: Book '{book.Title}' by {book.Author} operation completed!");
         //var tempData = GetTempData();
-            tempData["status"] = $"Book '{book.Title}' operation completed successfully!";
+        tempData["status"] = $"Book '{book.Title}' operation completed successfully!";
     }
 
     
@@ -31,7 +31,7 @@ public class LibraryEventHandlers
 
     public void HandleValidationFailure(Book book, int result)
     {
-            tempData["status"] = $"Validation failed for '{book.Title}',errorcode{result}";
+            tempData["status"] = $"Validation failed for '{book.Title}',errorcode '{result}'";
     }
 
 

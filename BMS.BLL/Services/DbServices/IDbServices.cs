@@ -16,15 +16,15 @@ public interface IDbServices<T> where T : class
     public Task<IEnumerable<T>> ViewAllBooks();
     public Task<Book> ViewBook(int id);
 
-    public event Action<Book> BookoperationSucceeded;
+    //public event Action<Book> BookoperationSucceeded;
 
-    public event Action<Book> BookDeletionSucceeded;
+    //public event Action<Book> BookDeletionSucceeded;
 
-    public event Action<Book,int> ValidationFailed;
+    //public event Action<Book,int> ValidationFailed;
 
-    public event Action<Book> BookupdationSucceeded;
+    //public event Action<Book> BookupdationSucceeded;
 
-    public event Action<Book> BookAddSucceeded;
+    //public event Action<Book> BookAddSucceeded;
 
     public Task<IEnumerable<Book>> SearchBooks(string keywords);
 }

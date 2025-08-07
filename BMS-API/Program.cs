@@ -9,19 +9,21 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Runtime.InteropServices;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-
+//newclassA(ClassInterfaceAttribute b)
 // Dependency Injection (DI) registers
 builder.Services.AddScoped<IValidation, Validation>();
 builder.Services.AddScoped<IBookAccess<Book>, BookAccess>();
 builder.Services.AddScoped<IDbServices<Book>, DbServices>();
 builder.Services.AddScoped<LibraryEventHandlers>();
 
+//builder.Services.AddS
 // SQL Lite DB context registration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -51,7 +53,8 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
-
+//-------------------------------------------------swagger-authorize------------------------------------------//
+//\/\///\///\///\///\/\\//\///\///\///
 // Swagger Configuration with JWT Authorization
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -89,6 +92,8 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+
+//-----------------------------------------------swagger-authorize--------------------------------------------------//
 
 var app = builder.Build();
 
