@@ -15,7 +15,7 @@ public class UserSeeder
 
         var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-        //seed 3 account with spedific roles
+        //seed ADMIN ACCOUNT 
         await CreateUserWithRole(userManager, "admin@dwvops1.com", "Admin123!", Roles.Admin);
   
 

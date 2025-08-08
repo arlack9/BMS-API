@@ -1,7 +1,8 @@
-﻿
-using AutoMapper;
-using BMS.BLL.Services;
+﻿using BMS.BLL.Services.DbServices;
+using BMS.BLL.Services.Events;
 using BMS.Models.Models;
+using BMS_UI.Dto;
+using BMS_UI.EventHandlers;
 using BMS_UI.ViewModels;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
@@ -9,50 +10,69 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BMS_UI.Controllers;
+
 [Authorize]
 [Route("Library")]
 public class LibraryController : Controller
-    {
-
-    
+{
     private readonly IDbServices<Book> _manageBook;
-
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly LibraryEventHandlers _leh;
 
-    public LibraryController(IDbServices<Book> idb , UserManager<IdentityUser> userManager)
+    private readonly IEvents _events;
+
+    public LibraryController(
+        IDbServices<Book> idb, 
+        UserManager<IdentityUser> userManager, 
+        LibraryEventHandlers leh,
+        
+        IEvents events)
     {
-         _manageBook = idb;     
-        _userManager = userManager;
+            _manageBook = idb;     
+            _userManager = userManager;
+            _leh = leh;
+            
+            //events
+            _events = events;
+
+        //events manage 
+        _events.BookoperationSucceeded += _leh.HandleBookOperationSuccess;
+        _events.BookDeletionSucceeded += _leh.HandleBookDeletionSuccess;
+        _events.ValidationFailed += _leh.HandleValidationFailure;
+        _events.BookupdationSucceeded += _leh.HandleBookUpdationSuccess;
+        _events.BookAddSucceeded += _leh.HandleBookAdditionSuccess;
     }
 
-
-    //view all books
     // GET: /Library
     [HttpGet]
     [AllowAnonymous]
-    
-    public IActionResult Index()
+    public async Task<IActionResult> Index(string keywords)
     {
-        var books = _manageBook.ViewAllBooks();
+        
+        if (keywords != null)
+        {
+            var SearchedBooks = await _manageBook.SearchBooks(keywords);
+            return View(SearchedBooks);
+        }
+
+        var books = await _manageBook.ViewAllBooks();
         return View(books);
+
+
     }
 
-
-
-    //AddBook
+    // AddBook - GET
     [HttpGet("book/")]
     [Authorize(Roles ="Admin")]
-    
-    public IActionResult AddBook ()
+    public async Task<IActionResult> AddBook()
     {
-        Console.WriteLine("just view");
         return View();
     }
 
+    // AddBook - POST
     [HttpPost("book/")]
     [Authorize(Roles ="Admin")]
-    
-    public IActionResult AddBook([FromForm] AddBook book)  
+    public async Task<IActionResult> AddBook([FromForm] AddBook book)  
     {
         if (book == null)
         {
@@ -62,105 +82,70 @@ public class LibraryController : Controller
 
         if (!ModelState.IsValid)
         {
-
             return View(book);
         }
 
-        //var domainBook = new Book()
-        //{
-        //    Title = book.Title,
-        //    Author = book.Author,
-        //    PublishedYear = book.PublishedYear
-        //};
-
-        //Automapper
-        //var domainBook = _mapper.Map<Book>(book);
-
-        //Mapster
+        
         var domainBook = book.Adapt<Book>();
-        Console.WriteLine(domainBook);
-
-        var result = _manageBook.AddBook(domainBook);
-
-        if (result <= 0)
-        {
-            ViewBag.BadRequest = "Book failed to add!";
-            return View(book);  
-        }
- 
-        TempData["SuccessMessage"] = "Book added successfully!";
+        await _manageBook.AddBook(domainBook);
+        
         return RedirectToAction("Index");
     }
 
-
-
-    //UpdateBook
+    // UpdateBook - GET
     [HttpGet("book/{id}")]
     [Authorize(Roles ="Admin")]
-    
-    public IActionResult UpdateBook(int id)
+    public async Task<IActionResult> UpdateBook(int id)
     {
-        var book = _manageBook.ViewBook(id);
+        var book = await _manageBook.ViewBook(id);
         if (book == null)
         {
             ViewBag.BadRequest = "Book doesnt exist!";
+            return RedirectToAction("Index");
         }
 
-
-        return View();
+        var updateBookViewModel = book.Adapt<BookDto>();
+        return View(updateBookViewModel);
     }
 
 
-    // POST: /Library/ form only support post , not put 
+
+    // UpdateBook - POST
     [HttpPost("book/{id}")]
     [Authorize(Roles ="Admin")]
-    
-    public IActionResult UpdateBook([FromForm] UpdateBook book, int id)
+    public async Task<IActionResult> UpdateBook([FromForm] BookDto bookDto)
     {
-    
-        if (book == null)
+        if (bookDto == null)
         {
            ViewBag.BadRequest="Book data is required";
            return View();
         }
 
-        //Automapper
-        //var domainBook = _mapper.Map<Book>(book);
-
-        //Mapster DTO-> Book
-        var domainBook = book.Adapt<Book>();
-
-        var result = _manageBook.UpdateBook(domainBook);
-
-                if (result <= 0)
-                {
-                    ViewBag.Error = "Book not updated";
-                }
-
-                ViewBag.Rowsupdated=$"{result} no of rows updated";
-                TempData["SuccessMessage"] = "Book updated successfully!";
-
-                return RedirectToAction("Index");
-    }
-
-
-    //delete book by id button
-    // DELETE: Library/{id}
-    [HttpDelete("book/{id}")]
-    [Authorize(Roles ="Admin")]
-    
-    public IActionResult DeleteBook(int id)
-    {
-        var result = _manageBook.DeleteBook(id);
-        if (result <= 0)
+        if (!ModelState.IsValid)
         {
-            ViewBag.Error = "Book Deletion Unsuccessful";
-            return View();
+            return View(bookDto);
         }
 
-        ViewBag.Success = $"{result} Book Successfully Deleted!";
-        return RedirectToAction("Index");
+     
+        //bookDto.Id = id;
 
+       
+        var domainBook = bookDto.Adapt<Book>();
+        await _manageBook.UpdateBook(domainBook);
+        
+        return RedirectToAction("Index");
+    }
+
+    // DeleteBook
+    [HttpPost("DeleteBook/{id}")]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles ="Admin")]
+    public async Task<IActionResult> DeleteBook(int id)
+    {
+       
+        await _manageBook.DeleteBook(id);
+
+        return RedirectToAction("Index");
     }
 }
 

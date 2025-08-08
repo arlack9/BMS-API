@@ -1,8 +1,10 @@
 ﻿using BMS.DAL.DB;
 using BMS.Models.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,44 +17,65 @@ public class BookAccess : IBookAccess<Book>
     {
         _context = context;   
     }
-    public int AddBook(Book entity)
+
+    //Addbook
+    public async Task AddBook(Book entity)
     {
-        _context.Books.Add(entity);
-        return _context.SaveChanges();//returns integer count of entries modified
+        await _context.Books.AddAsync(entity);
+        await _context.SaveChangesAsync();//returns integer count of entries modified
     }
 
-    public int DeleteBook(int id)
+
+    //Delete book by id
+    public async Task DeleteBook(int id)
     {
-        var book=_context.Books.Find(id);
-        if(book==null)
-        {
-            return -1;
-        }
-        _context.Books.Remove(book);
-        return _context.SaveChanges();
+        var book = await _context.Books.FindAsync(id);
+        var res =   _context.Books.Remove(book);
+        
+      await _context.SaveChangesAsync();
+       
 
     }
+     
 
-    public int UpdateBook(Book entity)
+    //Update Book 
+    public async Task UpdateBook(Book entity)
     {
         _context.Books.Update(entity);
-        return _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
-
-    public IEnumerable<Book> ViewAllBooks()
+     
+    //view all books
+    public async Task <IEnumerable<Book>> ViewAllBooks()
     {
-        return _context.Books.ToList<Book>();
+        return await _context.Books.ToListAsync();
         
     }
+     
+    //get book by id
+    public async Task <Book>ViewBook(int id) { 
 
-    public Book ViewBook(int id) { 
-
-        return _context.Books.Find(id);
+        return await _context.Books.FindAsync(id);
     }
 
-    // Book IBookAccess<Book>.ViewBook(int id) //no public keyword explicit interface implemtnation
-    //{
 
-    //    return _context.Books.Find(id);
-    //}
+    //Check whether book exist return boolean , takes linq predicate
+    public async Task <bool> BookExists(Expression<Func<Book,bool>> predicate)
+    {
+        return await _context.Books.AnyAsync(predicate);
+    }
+
+
+
+    //check using LINQ from BLL and return Books List
+    public async Task<IEnumerable<Book>> SearchBooks(Expression<Func<Book, bool>> predicate)
+    {
+        return await _context.Books.Where(predicate).ToListAsync();
+    }
+
+
+    //NO linq operations logics written here 
+
+
+ 
 }

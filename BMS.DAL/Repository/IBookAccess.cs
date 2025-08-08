@@ -1,6 +1,8 @@
-﻿using System;
+﻿using BMS.Models.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,10 +11,14 @@ namespace BMS.DAL.Repository;
 public interface IBookAccess<T> where T : class
 {
 
-    public int AddBook(T entity);
-    public int DeleteBook(int id);
-    public int UpdateBook(T entity);
-    public IEnumerable<T> ViewAllBooks();
-    public T ViewBook(int id);
+    public Task AddBook(T entity);
+    public Task DeleteBook(int id);
+    public Task UpdateBook(T entity);
+    public Task<IEnumerable<T>> ViewAllBooks();
+    public Task<T> ViewBook(int id);
 
+    //public Task<IEnumerable<Book>> BookSearch(string keywords);
+
+    public Task<bool> BookExists(Expression<Func<Book, bool>> predicate);
+    public Task<IEnumerable<Book>> SearchBooks(Expression<Func<Book, bool>> predicate);
 }
