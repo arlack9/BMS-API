@@ -19,3 +19,11 @@ Book Mangement System is an asp.net based app that includes all major production
 >Improved Louse coupling
 
 >Added Error Codes not yet implemented.
+
+# branch v8-filters
+
+>v8 20-8-25
+--------------------------------------------------------------------------
+>Added stored procedure
+>Set parms such as Title , Author , published year to and from , search keywords , etc.
+
